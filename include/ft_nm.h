@@ -11,9 +11,10 @@
 
 
 
-typedef struct s_env
+typedef struct s_file
 {
 	void 	*ptr;
+	int		isObject;
 	int		ptr_size;
-}				t_env;
+}				t_file;
 #endif

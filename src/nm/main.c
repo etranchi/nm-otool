@@ -44,7 +44,21 @@ void print_out(int nsyms, int symoff, int stroff, char *ptr) {
 
 }
 
-void handle_64(t_env *e) {
+
+void get_file_type(t_file *file) {
+	int type;
+
+	type = *(int *)((void *)file->ptr + sizeof(uint32_t) + sizeof(cpu_type_t) + sizeof(cpu_subtype_t));
+	file->isObject = 0;
+	if (type == MH_OBJECT) {
+		printf("OBJECT\n");
+		file->isObject = 1;
+	} else {
+		printf("NOT OBJECT\n");
+	}
+}
+
+void handle_64(t_file *file) {
 	int ncmds;
 	int i;
 	struct mach_header_64 *header;
@@ -52,13 +66,14 @@ void handle_64(t_env *e) {
 	struct symtab_command *sym;
 
 	i = -1;
-	header = (struct mach_header_64 *) e->ptr;
+	header = (struct mach_header_64 *)file->ptr;
 	ncmds = header->ncmds;
-	lc = (void *)ptr + sizeof(*header);
+	get_file_type(e);
+	lc = (void *)file->ptr + sizeof(*header);
 	while (++i < ncmds) {
 		if (lc->cmd == LC_SYMTAB) {
 			sym = (struct symtab_command *) lc;
-			print_out(sym->nsyms, sym->symoff, sym->stroff, ptr);
+			print_out(sym->nsyms, sym->symoff, sym->stroff, file->ptr);
 			break ;
 		}
 		lc = (void *)lc + lc->cmdsize;
@@ -67,24 +82,21 @@ void handle_64(t_env *e) {
 }
 
 
-void go_nm(t_env *e) {
+void go_nm(t_file *file) {
 	int magic_number;
 
-	magic_number = *(int *)e->ptr;
-
-	if (magic_number == MH_MAGIC_64) {
-		handle_64(e);
-	}
-	else if (magic_number == MH_MAGIC) {
+	magic_number = *(int *)file->ptr;
+	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
+		handle_64(file);
+	else if (magic_number == MH_MAGIC|| magic_number == MH_CIGAM )
 		printf("32\n");
-	}
 }
 
 int main(int ac, char **av) {
 	int fd;
 	char *ptr;
 	struct stat buf;
-	t_env *e;
+	t_file *file;
 
 	e = malloc(sizeof(t_env));
 
@@ -104,10 +116,10 @@ int main(int ac, char **av) {
 		printf("Error mmap\n");
 		return (0);
 	}
-	e->ptr = ptr;
-	e->ptr_size = buf.st_size;
-	go_nm(e);
-	if (munmap(ptr, buf.st_size) < 0) {
+	file->ptr = ptr;
+	file->ptr_size = buf.st_size;
+	go_nm(file);
+	if (munmap(file->ptr, buf.st_size) < 0) {
 		printf("Error munmap\n");
 		return (0);
 	}
