@@ -4,92 +4,83 @@
 
 
 
-void print_out(int nsyms, int symoff, int stroff, char *ptr) {
-	int i;
-	char *stringtable;
-	struct nlist_64 *array;
-	void *tmp;
-	i = -1;
-	array = (void *)ptr + symoff;
-	stringtable = (void *)ptr + stroff;
-	tmp = NULL;
-	while (++i < nsyms) {
-		if ((int)(stringtable + array[i].n_sect) == N_UNDF) {
-			printf("U ");
-		} else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_ABS)  {
-			printf("A ");
-		} else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_SECT) {
-			if ((int)stringtable + array[i].n_value == NO_SECT) {
-				printf("NO SECT\n");
-			} else {
-				if (tmp == NULL) {
-					tmp = (void *)(stringtable + array[i].n_value);
-				}
-				printf("%lx ", (void *)(stringtable + array[i].n_value) - (void *)tmp);
-				// printf("SECT\n");
-			}
-			printf("T ");
-		}
-		else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_PBUD) {
-			printf("P ");
-		} else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_INDR) {
-			printf("I " );
-		}
-		else {
-			printf("U ");
-		}
-		// printf("%p 0x%.9X %s\n",array, &array[i] ,stringtable + array[i].n_un.n_strx);
-		printf("%s\n", stringtable + array[i].n_un.n_strx);
-	}
+static void dump_segment_commands(t_file *f) {
+  off_t actual_offset = f->lc_offset;
+  for (uint32_t i = 0; i < f->ncmds; i++) {
 
+    struct load_command *cmd = (void *)f->ptr + actual_offset;
+  
+    if (f->isSwap) {
+    	printf("SWAP\n");
+      	swap_load_command(cmd, 0);
+    }
+
+    if (cmd->cmd == LC_SEGMENT_64) {
+    	printf("ici\n");
+      	struct segment_command_64 *segment = (void *)f->ptr + actual_offset;
+      if (f->isSwap) {
+        swap_segment_command_64(segment, 0);
+      }
+
+      printf("segname: %s\n", segment->segname);
+
+      // free(segment);
+    } else if (cmd->cmd == LC_SEGMENT) {
+    	printf("la\n");
+      struct segment_command *segment = (void *)f->ptr + actual_offset;
+      if (f->isSwap) {
+        swap_segment_command(segment, 0);
+      }
+
+      printf("segname: %s\n", segment->segname);
+
+      // free(segment);
+    }
+
+    actual_offset += cmd->cmdsize;
+    // free(cmd);
+  }
 }
 
 
-void get_file_type(t_file *file) {
-	int type;
+void handle_header(t_file *f) {
+	uint32_t ncmds;
 
-	type = *(int *)((void *)file->ptr + sizeof(uint32_t) + sizeof(cpu_type_t) + sizeof(cpu_subtype_t));
-	file->isObject = 0;
-	if (type == MH_OBJECT) {
-		printf("OBJECT\n");
-		file->isObject = 1;
+	if (f->is64) {
+		size_t header_size = sizeof(struct mach_header_64);
+		struct mach_header_64 *header = (void *)f->ptr;
+		printf("header %x\n",header->filetype & N_TYPE);
+		if (f->isSwap) {
+		  swap_mach_header_64(header, 0);
+		}
+		f->ncmds = header->ncmds;
+		printf("ncmds %d\n", header->ncmds);
+		f->lc_offset += header_size;
 	} else {
-		printf("NOT OBJECT\n");
-	}
-}
-
-void handle_64(t_file *file) {
-	int ncmds;
-	int i;
-	struct mach_header_64 *header;
-	struct load_command *lc;
-	struct symtab_command *sym;
-
-	i = -1;
-	header = (struct mach_header_64 *)file->ptr;
-	ncmds = header->ncmds;
-	get_file_type(e);
-	lc = (void *)file->ptr + sizeof(*header);
-	while (++i < ncmds) {
-		if (lc->cmd == LC_SYMTAB) {
-			sym = (struct symtab_command *) lc;
-			print_out(sym->nsyms, sym->symoff, sym->stroff, file->ptr);
-			break ;
+		size_t header_size = sizeof(struct mach_header);
+		struct mach_header *header = (void *)f->ptr + header_size;
+		if (f->isSwap) {
+		  swap_mach_header(header, 0);
 		}
-		lc = (void *)lc + lc->cmdsize;
+		f->ncmds = header->ncmds;
+		f->lc_offset += header_size;
 	}
-
+	dump_segment_commands(f);
 }
 
 
-void go_nm(t_file *file) {
+void get_magic(t_file *file) {
 	int magic_number;
 
 	magic_number = *(int *)file->ptr;
-	if (magic_number == MH_MAGIC_64 || magic_number == MH_CIGAM_64)
-		handle_64(file);
-	else if (magic_number == MH_MAGIC|| magic_number == MH_CIGAM )
-		printf("32\n");
+	file->is64 = is_magic_64(magic_number);
+	file->isFat = is_fat(magic_number);
+	file->isSwap = should_swap_bytes(magic_number);
+	if (file->isFat) {
+		// handle_fat_header(file);
+	} else {
+		handle_header(file);
+	}
 }
 
 int main(int ac, char **av) {
@@ -98,8 +89,10 @@ int main(int ac, char **av) {
 	struct stat buf;
 	t_file *file;
 
-	e = malloc(sizeof(t_env));
-
+	if(!(file = malloc(sizeof(t_file)))) {
+		printf("Error malloc\n");
+		return (0);
+	}
 	if (ac != 2) {
 		printf("No args..\n");
 		return (0);
@@ -118,7 +111,8 @@ int main(int ac, char **av) {
 	}
 	file->ptr = ptr;
 	file->ptr_size = buf.st_size;
-	go_nm(file);
+	file->lc_offset = 0;
+	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
 		printf("Error munmap\n");
 		return (0);

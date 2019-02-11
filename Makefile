@@ -1,6 +1,6 @@
 NM			= ft_nm
 OTOOL   	= ft_otool
-SRCS_NM		= src/nm/main.c
+SRCS_NM		= src/nm/main.c src/nm/handle_64.c
 SRCS_OTOOL 	= src/otool/main.c
 
 OBJS_NM		= 	$(patsubst srcs/%.c,objs/%.o,$(SRCS_NM))
