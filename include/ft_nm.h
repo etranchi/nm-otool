@@ -12,6 +12,13 @@
 
 
 
+typedef struct s_func {
+	unsigned long	value;
+	char			type;
+	char 			*name;
+	struct s_func *next;
+}				t_func;
+
 typedef struct s_file
 {
 	void	*ptr;
@@ -21,6 +28,7 @@ typedef struct s_file
 	int 	isFat;
 	int		ncmds;
 	int		lc_offset;
+	struct s_func 	*lst;
 }				t_file;
 
 void handle_64(t_file *file);

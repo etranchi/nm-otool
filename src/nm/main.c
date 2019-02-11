@@ -2,6 +2,90 @@
 
 # include "../../include/ft_nm.h"
 
+void get_magic(t_file *file);
+
+char getType(int hash) {
+	char c;
+
+	if (hash == N_UNDF)
+		c = 'U';
+	else if ((hash & N_TYPE) == N_ABS)
+		c = 'A';
+	else if ((hash & N_TYPE) == N_SECT)
+		c = 'T';
+	else if ((hash & N_TYPE) == N_PBUD)
+		c = 'P';
+	else if ((hash & N_TYPE) == N_INDR)
+		c = 'I';
+	else
+		c = 'U';
+	return (c);
+}	
+
+void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
+	t_func *func;
+	t_func *tmp;
+
+	func = malloc(sizeof(t_func));
+	func->name =ft_strdup(stringtable + table.n_un.n_strx);
+	func->type = getType(table.n_type);
+	func->value = table.n_value;
+	func->next = NULL;
+	tmp = *lst;
+	if (!tmp) {
+		*lst = func;
+		return;
+	} else {
+		while (tmp && tmp->next)
+			tmp = tmp->next;
+		tmp->next = func;
+	}
+}
+
+
+void print_lst(t_func *lst) {
+	while (lst) {
+		printf("%lx %c %s\n", lst->value, lst->type, lst->name);
+		lst = lst->next;
+	}
+}
+
+void print_out(int nsyms, int symoff, int stroff, t_file *f) {
+	int i;
+	char *stringtable;
+	struct nlist_64 *array;
+
+	i = -1;
+	array = (void *)f->ptr + symoff;
+	stringtable = (void *)f->ptr + stroff;
+
+	while (++i < nsyms) {
+		// if ((int)(stringtable + array[i].n_sect) == N_UNDF) {
+		// 	printf("U ");
+		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_ABS)  {
+		// 	printf("A ");
+		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_SECT) {
+		// 	if ((int)stringtable + array[i].n_value == NO_SECT) {
+		// 		printf("NO SECT\n");
+		// 	} else {
+		// 		printf("00000000%lx ", (void *)(array[i].n_value));
+		// 	}
+		// 	printf("T ");
+		// }
+		// else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_PBUD) {
+		// 	printf("P ");
+		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_INDR) {
+		// 	printf("I " );
+		// }
+		// else {
+		// 	printf("                  U ");
+		// }
+		// printf("%p 0x%.9X %s\n",array, &array[i] ,stringtable + array[i].n_un.n_strx);
+		addTo(&f->lst, stringtable, array[i]);
+	}
+	print_lst(f->lst);
+
+}
 
 
 static void dump_segment_commands(t_file *f) {
@@ -9,36 +93,26 @@ static void dump_segment_commands(t_file *f) {
   for (uint32_t i = 0; i < f->ncmds; i++) {
 
     struct load_command *cmd = (void *)f->ptr + actual_offset;
-  
     if (f->isSwap) {
-    	printf("SWAP\n");
       	swap_load_command(cmd, 0);
     }
-
     if (cmd->cmd == LC_SEGMENT_64) {
-    	printf("ici\n");
-      	struct segment_command_64 *segment = (void *)f->ptr + actual_offset;
-      if (f->isSwap) {
-        swap_segment_command_64(segment, 0);
-      }
-
-      printf("segname: %s\n", segment->segname);
-
-      // free(segment);
+		struct segment_command_64 *segment = (void *)f->ptr + actual_offset;
+		if (f->isSwap) {
+			swap_segment_command_64(segment, 0);
+		}
+		printf("segname: %s\n", segment->segname);
     } else if (cmd->cmd == LC_SEGMENT) {
-    	printf("la\n");
-      struct segment_command *segment = (void *)f->ptr + actual_offset;
-      if (f->isSwap) {
-        swap_segment_command(segment, 0);
-      }
-
-      printf("segname: %s\n", segment->segname);
-
-      // free(segment);
+		struct segment_command *segment = (void *)f->ptr + actual_offset;
+		if (f->isSwap) {
+			swap_segment_command(segment, 0);
+		}
+		printf("segname: %s\n", segment->segname);
+    } else if (cmd->cmd == LC_SYMTAB) {
+    	struct symtab_command *sym = (struct symtab_command *) cmd;
+    	print_out(sym->nsyms, sym->symoff, sym->stroff, f);
     }
-
     actual_offset += cmd->cmdsize;
-    // free(cmd);
   }
 }
 
@@ -49,12 +123,10 @@ void handle_header(t_file *f) {
 	if (f->is64) {
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
-		printf("header %x\n",header->filetype & N_TYPE);
 		if (f->isSwap) {
 		  swap_mach_header_64(header, 0);
 		}
 		f->ncmds = header->ncmds;
-		printf("ncmds %d\n", header->ncmds);
 		f->lc_offset += header_size;
 	} else {
 		size_t header_size = sizeof(struct mach_header);
@@ -112,6 +184,7 @@ int main(int ac, char **av) {
 	file->ptr = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
+	file->lst = NULL;
 	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
 		printf("Error munmap\n");
