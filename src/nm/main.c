@@ -25,27 +25,41 @@ char getType(int hash) {
 void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 	t_func *func;
 	t_func *tmp;
+	t_func *prev;
 
 	func = malloc(sizeof(t_func));
-	func->name =ft_strdup(stringtable + table.n_un.n_strx);
-	func->type = getType(table.n_type);
+	func->name = stringtable + table.n_un.n_strx;
+	func->type = table.n_type;
 	func->value = table.n_value;
+	func->sect = table.n_sect;
 	func->next = NULL;
 	tmp = *lst;
 	if (!tmp) {
 		*lst = func;
 		return;
 	} else {
-		while (tmp && tmp->next)
+		while (tmp) {
+			if(ft_strcmp(tmp->name, func->name) > 0)
+				break;
+			prev = tmp;
 			tmp = tmp->next;
-		tmp->next = func;
+		}
+		func->next = tmp;
+        if (prev != NULL)
+            prev->next = func;
+        else 
+            *lst = func;
 	}
 }
 
 
 void print_lst(t_func *lst) {
 	while (lst) {
-		printf("%lx %c %s\n", lst->value, lst->type, lst->name);
+		
+		printf("0000000%lx ", lst->value);
+		printf("                 ");
+		printf("%c ", getType(lst->type));
+		printf("%s\n", lst->name);
 		lst = lst->next;
 	}
 }
@@ -83,10 +97,29 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 		// printf("%p 0x%.9X %s\n",array, &array[i] ,stringtable + array[i].n_un.n_strx);
 		addTo(&f->lst, stringtable, array[i]);
 	}
+	//order_lst(f->lst);
 	print_lst(f->lst);
 
 }
 
+
+
+void get_sc_64(struct segment_command_64 *seg, t_file *file) {
+	char **tab;
+	struct section_64 *sec;
+	int i;
+	if (!(file->sections = (char **)malloc(sizeof(char*) * (int) seg->nsects + 1))) 
+		return ;
+	file->sections[seg->nsects] = 0;
+	sec = (struct section_64*)(seg + 1);
+	i = -1;
+	while (++i < (int)seg->nsects) {
+		file->sections[i] = sec->sectname;
+		printf("%s\n", file->sections[i]);
+		sec++;
+	}
+	return ;
+}
 
 static void dump_segment_commands(t_file *f) {
   off_t actual_offset = f->lc_offset;
@@ -101,14 +134,17 @@ static void dump_segment_commands(t_file *f) {
 		if (f->isSwap) {
 			swap_segment_command_64(segment, 0);
 		}
-		printf("segname: %s\n", segment->segname);
+		get_sc_64(segment, f);
+
+		//printf("segname: %s\n", segment->segname);
     } else if (cmd->cmd == LC_SEGMENT) {
 		struct segment_command *segment = (void *)f->ptr + actual_offset;
 		if (f->isSwap) {
 			swap_segment_command(segment, 0);
 		}
-		printf("segname: %s\n", segment->segname);
+		//printf("segname: %s\n", segment->segname);
     } else if (cmd->cmd == LC_SYMTAB) {
+    	// printf("symtab\n");
     	struct symtab_command *sym = (struct symtab_command *) cmd;
     	print_out(sym->nsyms, sym->symoff, sym->stroff, f);
     }

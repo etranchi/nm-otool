@@ -1,0 +1,34 @@
+__text
+__stubs
+__stub_helper
+__cstring
+__unwind_info
+__nl_symbol_ptr
+__la_symbol_ptr
+0000000100000000 T __mh_execute_header
+0000000100001630 T _addTo
+0000000100001a30 T _dump_segment_commands
+                 U _fstat$INODE64
+0000000100001440 T _ft_strcmp
+0000000100001590 T _getType
+0000000100001b70 T _get_magic
+0000000100001890 T _get_sc_64
+0000000100001960 T _handle_header
+0000000100001e50 T _is_fat
+0000000100001dd0 T _is_magic_64
+0000000100001be0 T _main
+                 U _malloc
+                 U _mmap
+                 U _munmap
+                 U _open
+0000000100001500 T _order_lst
+0000000100001750 T _print_lst
+00000001000017f0 T _print_out
+                 U _printf
+0000000100001e00 T _should_swap_bytes
+                 U _swap_load_command
+                 U _swap_mach_header
+                 U _swap_mach_header_64
+                 U _swap_segment_command
+                 U _swap_segment_command_64
+                 U dyld_stub_binder

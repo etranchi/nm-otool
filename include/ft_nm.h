@@ -15,6 +15,7 @@
 typedef struct s_func {
 	unsigned long	value;
 	char			type;
+	int				sect;
 	char 			*name;
 	struct s_func *next;
 }				t_func;
@@ -28,6 +29,7 @@ typedef struct s_file
 	int 	isFat;
 	int		ncmds;
 	int		lc_offset;
+	char 	**sections;
 	struct s_func 	*lst;
 }				t_file;
 
