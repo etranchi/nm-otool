@@ -38,6 +38,7 @@ SRC= ft_printf.c\
 		libft/ft_strdup.c\
 		libft/ft_strjoin.c\
 		libft/ft_strnew.c\
+		libft/ft_strstr.c\
 		libft/ft_strcmp.c\
 		libft/ft_memdel.c\
 		libft/ft_memalloc.c\
