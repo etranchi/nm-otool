@@ -48,35 +48,55 @@ void			sort_name(t_func **begin)
 	}
 }
 
+
+void get_right_section(t_func *lst, t_file *file) {
+	t_section *section;
+	int i;
+	int index;
+
+	section = file->section;
+	index = 1;
+	while(section)
+	{
+		i = -1;
+		while (section->name[++i]){
+			if(lst->sect == index)
+			{
+				lst->type = section->name[i][2];
+				return ;
+			}
+			index++;
+		}
+		
+
+		section = section->next;
+	}
+}
+
 void getType(t_func *lst, t_file *file) {
 	char c;
 	char *tmp;
 
 
-	// if (lst->type == N_UNDF || (lst->type & N_TYPE) == N_ABS) {
-	// 	c = 'U';
-	// 	lst->sect = NO_SECT;
-	// }
-	// else if ((lst->type & N_TYPE) == N_SECT) {
-	// 	if (lst->type & N_EXT) {
-	// 		c = 'T';
-	// 	} else {
-	// 		c = 't';
-	// 	}
-	// 	tmp = file->sections[lst->sect - 1];
-	// 	printf("name %s %d   ", tmp , lst->sect);
-	// 	if (tmp)
-	// 		c = ft_toupper((int)tmp[2]);
-	// 	else 
-	// 		c = 'S';
-	// }
-	// else if ((lst->type & N_TYPE) == N_PBUD)
-	// 	c = 'P';
-	// else if ((lst->type & N_TYPE) == N_INDR)
-	// 	c = 'I';
-	// else
-	// 	c = 'U';
-	// lst->type = (char)c;
+	if (lst->type == N_UNDF || (lst->type & N_TYPE) == N_ABS) {
+		c = 'U';
+		lst->sect = NO_SECT;
+	}
+	else if ((lst->type & N_TYPE) == N_SECT) {
+		if (lst->type & N_EXT) {
+			c = 'T';
+		} else {
+			get_right_section(lst, file);
+			return ;
+		}
+	}
+	else if ((lst->type & N_TYPE) == N_PBUD)
+		c = 'P';
+	else if ((lst->type & N_TYPE) == N_INDR)
+		c = 'I';
+	else
+		c = 'U';
+	lst->type = (char)c;
 }	
 
 void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
@@ -100,6 +120,20 @@ void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 	}
 }
 
+void addToSections(t_section **lst, t_section *sec) {
+	t_section * tmp;
+
+	if (!(*lst)) {
+		*lst = sec;
+		return;
+	} else {
+		tmp = *lst;
+		while (tmp && tmp->next) 
+			tmp = tmp->next;
+		tmp->next = sec;
+	}
+}
+
 
 void print_lst(t_func *lst, t_file *f) {
 	t_func *tmp;
@@ -110,7 +144,6 @@ void print_lst(t_func *lst, t_file *f) {
 
 
 	tmp = lst;
-	section = f->sections;
 	while (lst) {
 		getType(lst, f);
 		printf("0000000%lx ", lst->value);
@@ -119,15 +152,6 @@ void print_lst(t_func *lst, t_file *f) {
 		printf("%s\n", lst->name);
 		lst = lst->next;
 	}
-	while (section && section->next) {
-		n_section = section->next;
-		while (section->name[++i])
-			free(section->name[i]);
-		free(section->name);
-		free(section);
-		section = n_section;
-	}
-	while(1);
 }
 
 void print_out(int nsyms, int symoff, int stroff, t_file *f) {
@@ -171,42 +195,27 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 }
 
 
-
-
-void addToSections(t_section **lst, t_section *sec) {
-	t_section * tmp;
-
-	if (!(*lst)) {
-		*lst = sec;
-		return;
-	} else {
-		tmp = *lst;
-		while (tmp && tmp->next) 
-			tmp = tmp->next;
-		tmp->next = sec;
-	}
-}
-
 void get_sc_64(struct segment_command_64 *seg, t_file *file) {
 	t_section *sec;
 	struct section_64 *section;
-	static int index = 0;
+	static int index = 1;
 	int i;
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
 		return ;
 	sec->name[seg->nsects] = '\0';
-	sec->index = index;
-	sec->next = NULL;
+	sec->index = index++;
 	section = (struct section_64*)(seg + 1);
+	sec->next = NULL;
 	i = -1;
 	while (++i < (int)seg->nsects) {
-		if (!(sec->name[i] = malloc(sizeof(char) * ft_strlen(section->sectname))))
-		ft_strcpy(sec->name[i], section->sectname);
+		if (!(sec->name[i] = ft_strdup(section->sectname))) {
+			return;
+		}
 		section++;
 	}
-	addToSections(&file->sections, sec);
+	addToSections(&file->section, sec);
 	return ;
 }
 
@@ -281,7 +290,6 @@ int main(int ac, char **av) {
 	struct stat buf;
 	t_file *file;
 
-	printf("PLOUUUUUUF\n");
 	if(!(file = malloc(sizeof(t_file)))) {
 		printf("Error malloc\n");
 		return (0);
@@ -305,7 +313,7 @@ int main(int ac, char **av) {
 	file->ptr = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
-	file->sections = NULL;
+	file->section = NULL;
 	file->lst = NULL;
 	file->lst_size = 0;
 	get_magic(file);
@@ -314,6 +322,5 @@ int main(int ac, char **av) {
 		return (0);
 	}
 	free(file);
-	while (1);
 	return (0);
 }

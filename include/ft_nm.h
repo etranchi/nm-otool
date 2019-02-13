@@ -38,7 +38,8 @@ typedef struct s_file
 	int		ncmds;
 	int		lc_offset;
 	int 	lst_size;
-	t_section 	*sections;
+	int		nsects;
+	t_section 	*section;
 	struct s_func 	*lst;
 }				t_file;
 
