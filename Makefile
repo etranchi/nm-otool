@@ -38,7 +38,8 @@ clean:
 			@ echo "\033[1;33m---> All .o files cleared\033[0m \033[92m✓\033[0m";
 
 fclean:		clean
-			@ /bin/rm -f $(NAME)
+			@ /bin/rm -f $(NM)
+			@ /bin/rm -f $(OTOOL)
 			@ echo "\n\033[1;33m---> Everything cleared\033[2;00m \033[92m✓\033[0m";
 re : fclean all
 

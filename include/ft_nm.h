@@ -2,6 +2,7 @@
 #ifndef FT_NM_H
 # define FT_NM_H
 # include <sys/mman.h>
+# include "../lib/libft/libft.h"
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
 # include <mach-o/swap.h>
@@ -20,6 +21,13 @@ typedef struct s_func {
 	struct s_func *next;
 }				t_func;
 
+
+typedef struct s_section {
+	char **name;
+	int index;
+	struct s_section *next;
+}				t_section;
+
 typedef struct s_file
 {
 	void	*ptr;
@@ -29,7 +37,8 @@ typedef struct s_file
 	int 	isFat;
 	int		ncmds;
 	int		lc_offset;
-	char 	**sections;
+	int 	lst_size;
+	t_section 	*sections;
 	struct s_func 	*lst;
 }				t_file;
 

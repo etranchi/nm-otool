@@ -4,28 +4,84 @@
 
 void get_magic(t_file *file);
 
-char getType(int hash) {
-	char c;
 
-	if (hash == N_UNDF)
-		c = 'U';
-	else if ((hash & N_TYPE) == N_ABS)
-		c = 'A';
-	else if ((hash & N_TYPE) == N_SECT)
-		c = 'T';
-	else if ((hash & N_TYPE) == N_PBUD)
-		c = 'P';
-	else if ((hash & N_TYPE) == N_INDR)
-		c = 'I';
-	else
-		c = 'U';
-	return (c);
+
+
+void swap_value(t_func *first, t_func *second) {
+	char 	*tmp_name;
+	int 	tmp_type;
+	int 	tmp_sect;
+	unsigned long tmp_value;
+
+	tmp_name = first->name;
+	tmp_type = first->type;
+	tmp_sect = first->sect;
+	tmp_value = first->value;
+	first->name = second->name;
+	first->type = second->type;
+	first->sect = second->sect;
+	first->value = second->value;
+	second->name = tmp_name;
+	second->type = tmp_type;
+	second->sect = tmp_sect;
+	second->value = tmp_value;
+
+}
+
+void			sort_name(t_func **begin)
+{
+	t_func	*curr;
+	t_func	*next;
+	char	*tmp;
+
+	curr = (*begin);
+	while (curr && curr->next != NULL)
+	{
+		next = curr->next;
+		if (next && (ft_strcmp(curr->name, next->name) > 0))
+		{
+			swap_value(curr, next);
+			curr = (*begin);
+		}
+		else
+			curr = curr->next;
+	}
+}
+
+void getType(t_func *lst, t_file *file) {
+	char c;
+	char *tmp;
+
+
+	// if (lst->type == N_UNDF || (lst->type & N_TYPE) == N_ABS) {
+	// 	c = 'U';
+	// 	lst->sect = NO_SECT;
+	// }
+	// else if ((lst->type & N_TYPE) == N_SECT) {
+	// 	if (lst->type & N_EXT) {
+	// 		c = 'T';
+	// 	} else {
+	// 		c = 't';
+	// 	}
+	// 	tmp = file->sections[lst->sect - 1];
+	// 	printf("name %s %d   ", tmp , lst->sect);
+	// 	if (tmp)
+	// 		c = ft_toupper((int)tmp[2]);
+	// 	else 
+	// 		c = 'S';
+	// }
+	// else if ((lst->type & N_TYPE) == N_PBUD)
+	// 	c = 'P';
+	// else if ((lst->type & N_TYPE) == N_INDR)
+	// 	c = 'I';
+	// else
+	// 	c = 'U';
+	// lst->type = (char)c;
 }	
 
 void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 	t_func *func;
 	t_func *tmp;
-	t_func *prev;
 
 	func = malloc(sizeof(t_func));
 	func->name = stringtable + table.n_un.n_strx;
@@ -38,30 +94,40 @@ void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 		*lst = func;
 		return;
 	} else {
-		while (tmp) {
-			if(ft_strcmp(tmp->name, func->name) > 0)
-				break;
-			prev = tmp;
+		while (tmp && tmp->next)
 			tmp = tmp->next;
-		}
-		func->next = tmp;
-        if (prev != NULL)
-            prev->next = func;
-        else 
-            *lst = func;
+		tmp->next = func;
 	}
 }
 
 
-void print_lst(t_func *lst) {
+void print_lst(t_func *lst, t_file *f) {
+	t_func *tmp;
+	t_func *next;
+	t_section *section;
+	t_section *n_section;
+	int i = -1;
+
+
+	tmp = lst;
+	section = f->sections;
 	while (lst) {
-		
+		getType(lst, f);
 		printf("0000000%lx ", lst->value);
 		printf("                 ");
-		printf("%c ", getType(lst->type));
+		printf("%c ", lst->type);
 		printf("%s\n", lst->name);
 		lst = lst->next;
 	}
+	while (section && section->next) {
+		n_section = section->next;
+		while (section->name[++i])
+			free(section->name[i]);
+		free(section->name);
+		free(section);
+		section = n_section;
+	}
+	while(1);
 }
 
 void print_out(int nsyms, int symoff, int stroff, t_file *f) {
@@ -72,8 +138,8 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 	i = -1;
 	array = (void *)f->ptr + symoff;
 	stringtable = (void *)f->ptr + stroff;
-
 	while (++i < nsyms) {
+		// printf("i %d\n", i);
 		// if ((int)(stringtable + array[i].n_sect) == N_UNDF) {
 		// 	printf("U ");
 		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_ABS)  {
@@ -95,36 +161,58 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 		// 	printf("                  U ");
 		// }
 		// printf("%p 0x%.9X %s\n",array, &array[i] ,stringtable + array[i].n_un.n_strx);
+
 		addTo(&f->lst, stringtable, array[i]);
 	}
-	//order_lst(f->lst);
-	print_lst(f->lst);
+	sort_name(&f->lst);
+
+	print_lst(f->lst, f);
 
 }
 
 
 
+
+void addToSections(t_section **lst, t_section *sec) {
+	t_section * tmp;
+
+	if (!(*lst)) {
+		*lst = sec;
+		return;
+	} else {
+		tmp = *lst;
+		while (tmp && tmp->next) 
+			tmp = tmp->next;
+		tmp->next = sec;
+	}
+}
+
 void get_sc_64(struct segment_command_64 *seg, t_file *file) {
-	char **tab;
-	struct section_64 *sec;
+	t_section *sec;
+	struct section_64 *section;
+	static int index = 0;
 	int i;
-	if (!(file->sections = (char **)malloc(sizeof(char*) * (int) seg->nsects + 1))) 
+	if (!(sec = malloc(sizeof(t_section))))
 		return ;
-	file->sections[seg->nsects] = 0;
-	sec = (struct section_64*)(seg + 1);
+	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
+		return ;
+	sec->name[seg->nsects] = '\0';
+	sec->index = index;
+	sec->next = NULL;
+	section = (struct section_64*)(seg + 1);
 	i = -1;
 	while (++i < (int)seg->nsects) {
-		file->sections[i] = sec->sectname;
-		printf("%s\n", file->sections[i]);
-		sec++;
+		if (!(sec->name[i] = malloc(sizeof(char) * ft_strlen(section->sectname))))
+		ft_strcpy(sec->name[i], section->sectname);
+		section++;
 	}
+	addToSections(&file->sections, sec);
 	return ;
 }
 
 static void dump_segment_commands(t_file *f) {
   off_t actual_offset = f->lc_offset;
   for (uint32_t i = 0; i < f->ncmds; i++) {
-
     struct load_command *cmd = (void *)f->ptr + actual_offset;
     if (f->isSwap) {
       	swap_load_command(cmd, 0);
@@ -135,16 +223,12 @@ static void dump_segment_commands(t_file *f) {
 			swap_segment_command_64(segment, 0);
 		}
 		get_sc_64(segment, f);
-
-		//printf("segname: %s\n", segment->segname);
     } else if (cmd->cmd == LC_SEGMENT) {
 		struct segment_command *segment = (void *)f->ptr + actual_offset;
 		if (f->isSwap) {
 			swap_segment_command(segment, 0);
 		}
-		//printf("segname: %s\n", segment->segname);
     } else if (cmd->cmd == LC_SYMTAB) {
-    	// printf("symtab\n");
     	struct symtab_command *sym = (struct symtab_command *) cmd;
     	print_out(sym->nsyms, sym->symoff, sym->stroff, f);
     }
@@ -197,6 +281,7 @@ int main(int ac, char **av) {
 	struct stat buf;
 	t_file *file;
 
+	printf("PLOUUUUUUF\n");
 	if(!(file = malloc(sizeof(t_file)))) {
 		printf("Error malloc\n");
 		return (0);
@@ -220,12 +305,15 @@ int main(int ac, char **av) {
 	file->ptr = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
+	file->sections = NULL;
 	file->lst = NULL;
+	file->lst_size = 0;
 	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
 		printf("Error munmap\n");
 		return (0);
 	}
-
+	free(file);
+	while (1);
 	return (0);
 }
