@@ -1,4 +1,7 @@
+
+# include "../../include/ft_nm.h"
+
 int main() {
-	printf("otool\n");
+	ft_printf("otool\n");
 	return (0);
 }

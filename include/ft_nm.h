@@ -2,7 +2,7 @@
 #ifndef FT_NM_H
 # define FT_NM_H
 # include <sys/mman.h>
-# include "../lib/libft/libft.h"
+# include "../lib/ft_printf/ft_printf.h"
 # include <mach-o/loader.h>
 # include <mach-o/nlist.h>
 # include <mach-o/swap.h>
@@ -11,7 +11,7 @@
 # include <stdlib.h>
 
 
-
+int		ft_printf(const char *format, ...);
 
 typedef struct s_func {
 	unsigned long	value;

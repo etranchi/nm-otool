@@ -149,12 +149,12 @@ void print_lst(t_func *lst, t_file *f) {
 			break ;
 		getType(lst, f);
 		if (lst->type == 'U')
-			printf("                 ");
+			ft_printf("                 ");
 		else {
-			printf("0000000%lx ", lst->value);
+			ft_printf("0000000%lx ", lst->value);
 		}
-		printf("%c ", lst->type);	
-		printf("%s\n", lst->name);
+		ft_printf("%c ", lst->type);	
+		ft_printf("%s\n", lst->name);
 		lst = lst->next;
 	}
 }
@@ -167,36 +167,10 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 	i = -1;
 	array = (void *)f->ptr + symoff;
 	stringtable = (void *)f->ptr + stroff;
-	while (++i < nsyms) {
-		// printf("i %d\n", i);
-		// if ((int)(stringtable + array[i].n_sect) == N_UNDF) {
-		// 	printf("U ");
-		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_ABS)  {
-		// 	printf("A ");
-		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_SECT) {
-		// 	if ((int)stringtable + array[i].n_value == NO_SECT) {
-		// 		printf("NO SECT\n");
-		// 	} else {
-		// 		printf("00000000%lx ", (void *)(array[i].n_value));
-		// 	}
-		// 	printf("T ");
-		// }
-		// else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_PBUD) {
-		// 	printf("P ");
-		// } else if (((int)(stringtable + array[i].n_type) & N_TYPE) == N_INDR) {
-		// 	printf("I " );
-		// }
-		// else {
-		// 	printf("                  U ");
-		// }
-		// printf("%p 0x%.9X %s\n",array, &array[i] ,stringtable + array[i].n_un.n_strx);
-
+	while (++i < nsyms)
 		addTo(&f->lst, stringtable, array[i]);
-	}
 	sort_name(&f->lst);
-
 	print_lst(f->lst, f);
-
 }
 
 
@@ -209,7 +183,7 @@ void get_sc_64(struct segment_command_64 *seg, t_file *file) {
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
 		return ;
-	sec->name[seg->nsects] = '\0';
+	sec->name[seg->nsects] = 0;
 	sec->index = index++;
 	section = (struct section_64*)(seg + 1);
 	sec->next = NULL;
@@ -296,23 +270,23 @@ int main(int ac, char **av) {
 	t_file *file;
 
 	if(!(file = malloc(sizeof(t_file)))) {
-		printf("Error malloc\n");
+		ft_printf("Error malloc\n");
 		return (0);
 	}
 	if (ac != 2) {
-		printf("No args..\n");
+		ft_printf("No args..\n");
 		return (0);
 	}
 	if ((fd = open(av[1], O_RDONLY)) < 0) {
-		printf("Error open\n");
+		ft_printf("Error open\n");
 		return (0);
 	}
 	if (fstat(fd, &buf) < 0) {
-		printf("Error stat\n");
+		ft_printf("Error stat\n");
 		return (0);
 	}
 	if ((ptr = mmap(0, buf.st_size,PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED) {
-		printf("Error mmap\n");
+		ft_printf("Error mmap\n");
 		return (0);
 	}
 	file->ptr = ptr;
@@ -323,7 +297,7 @@ int main(int ac, char **av) {
 	file->lst_size = 0;
 	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
-		printf("Error munmap\n");
+		ft_printf("Error munmap\n");
 		return (0);
 	}
 	free(file);
