@@ -63,6 +63,14 @@ void get_right_section(t_func *lst, t_file *file) {
 			if(lst->sect == index)
 			{
 				lst->type = section->name[i][2];
+				if (!ft_strcmp(section->name[i], "__text"))
+					lst->type -= 32;
+				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__common"))
+					lst->type = 'S';
+				if (!ft_strcmp(section->name[i], "__data"))
+					lst->type = 'D';
+				if (!ft_strcmp(section->name[i], "__const"))
+					lst->type = 'S';
 				return ;
 			}
 			index++;
@@ -83,12 +91,8 @@ void getType(t_func *lst, t_file *file) {
 		lst->sect = NO_SECT;
 	}
 	else if ((lst->type & N_TYPE) == N_SECT) {
-		if (lst->type & N_EXT) {
-			c = 'T';
-		} else {
 			get_right_section(lst, file);
 			return ;
-		}
 	}
 	else if ((lst->type & N_TYPE) == N_PBUD)
 		c = 'P';
@@ -257,7 +261,10 @@ void get_magic(t_file *file) {
 	file->isFat = is_fat(magic_number);
 	file->isSwap = should_swap_bytes(magic_number);
 	if (file->isFat) {
+		ft_printf("FAT\n");
 		// handle_fat_header(file);
+	} else if (!file->is64) {
+		ft_printf("32\n");
 	} else {
 		handle_header(file);
 	}
