@@ -145,10 +145,15 @@ void print_lst(t_func *lst, t_file *f) {
 
 	tmp = lst;
 	while (lst) {
+		if (ft_strstr(lst->name, "radr://"))
+			break ;
 		getType(lst, f);
-		printf("0000000%lx ", lst->value);
-		printf("                 ");
-		printf("%c ", lst->type);
+		if (lst->type == 'U')
+			printf("                 ");
+		else {
+			printf("0000000%lx ", lst->value);
+		}
+		printf("%c ", lst->type);	
 		printf("%s\n", lst->name);
 		lst = lst->next;
 	}
