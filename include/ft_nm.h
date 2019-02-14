@@ -3,8 +3,6 @@
 # define FT_NM_H
 # include <sys/mman.h>
 # include "../lib/ft_printf/ft_printf.h"
-# include <mach-o/loader.h>
-# include <mach-o/nlist.h>
 # include <mach-o/swap.h>
 # include <fcntl.h>
 # include <sys/stat.h>
@@ -35,6 +33,8 @@ typedef struct s_file
 	int 	is64;
 	int 	isSwap;
 	int 	isFat;
+	int		did64;
+	int		did32;
 	int		ncmds;
 	int		lc_offset;
 	int 	lst_size;
@@ -47,4 +47,8 @@ void handle_64(t_file *file);
 int is_magic_64(uint32_t magic);
 int should_swap_bytes(uint32_t magic);
 int is_fat(uint32_t magic);
+
+void get_sc_64(struct segment_command_64 *seg, t_file *file);
+void get_sc_32(struct segment_command *seg, t_file *file);
+void addToSections(t_section **lst, t_section *sec);
 #endif

@@ -2,6 +2,9 @@
 
 # include "../../include/ft_nm.h"
 
+
+#define SWAP32(x) ((((x) & 0xff000000) >> 24) | (((x) & 0xff0000) >> 8) | (((x) & 0xff00) << 8) | (((x) & 0xff) << 24))
+
 void get_magic(t_file *file);
 
 
@@ -33,18 +36,26 @@ void			sort_name(t_func **begin)
 	t_func	*curr;
 	t_func	*next;
 	char	*tmp;
+	t_func *prev;
+	t_func *prev_bis;
+
 
 	curr = (*begin);
+	prev = NULL;
+	prev_bis = NULL;
 	while (curr && curr->next != NULL)
 	{
 		next = curr->next;
 		if (next && (ft_strcmp(curr->name, next->name) > 0))
 		{
-			swap_value(curr, next);
+			swap_value(next, curr);
 			curr = (*begin);
 		}
-		else
+		else {
+			prev_bis = prev;
+			prev = curr;
 			curr = curr->next;
+		}
 	}
 }
 
@@ -53,7 +64,7 @@ void get_right_section(t_func *lst, t_file *file) {
 	t_section *section;
 	int i;
 	int index;
-
+	char tmp_type;
 	section = file->section;
 	index = 1;
 	while(section)
@@ -62,15 +73,22 @@ void get_right_section(t_func *lst, t_file *file) {
 		while (section->name[++i]){
 			if(lst->sect == index)
 			{
+				tmp_type = lst->type;
 				lst->type = section->name[i][2];
-				if (!ft_strcmp(section->name[i], "__text"))
+				if (!ft_strcmp(section->name[i], "__text") && (tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__common"))
+				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
 					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__data"))
-					lst->type = 'D';
-				if (!ft_strcmp(section->name[i], "__const"))
-					lst->type = 'S';
+					lst->type = 'd';
+				if (!ft_strcmp(section->name[i], "__data") && (tmp_type & N_EXT))
+					lst->type -= 32;
+				if (!ft_strcmp(section->name[i], "__common") && tmp_type & N_PEXT)
+					lst->type += 32;
+				if (!ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring")|| !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const"))
+					lst->type = 's';
+				if (!ft_strcmp(section->name[i], "__const") && tmp_type & N_EXT) 
+					lst->type -= 32;
 				return ;
 			}
 			index++;
@@ -155,7 +173,7 @@ void print_lst(t_func *lst, t_file *f) {
 		if (lst->type == 'U')
 			ft_printf("                 ");
 		else {
-			ft_printf("0000000%lx ", lst->value);
+			ft_printf("%016lx ", lst->value);
 		}
 		ft_printf("%c ", lst->type);	
 		ft_printf("%s\n", lst->name);
@@ -174,58 +192,37 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 	while (++i < nsyms)
 		addTo(&f->lst, stringtable, array[i]);
 	sort_name(&f->lst);
-	print_lst(f->lst, f);
+	if (!f->isFat)
+		print_lst(f->lst, f);
 }
 
 
-void get_sc_64(struct segment_command_64 *seg, t_file *file) {
-	t_section *sec;
-	struct section_64 *section;
-	static int index = 1;
-	int i;
-	if (!(sec = malloc(sizeof(t_section))))
-		return ;
-	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
-		return ;
-	sec->name[seg->nsects] = 0;
-	sec->index = index++;
-	section = (struct section_64*)(seg + 1);
-	sec->next = NULL;
-	i = -1;
-	while (++i < (int)seg->nsects) {
-		if (!(sec->name[i] = ft_strdup(section->sectname))) {
-			return;
-		}
-		section++;
-	}
-	addToSections(&file->section, sec);
-	return ;
-}
+
 
 static void dump_segment_commands(t_file *f) {
-  off_t actual_offset = f->lc_offset;
-  for (uint32_t i = 0; i < f->ncmds; i++) {
-    struct load_command *cmd = (void *)f->ptr + actual_offset;
-    if (f->isSwap) {
-      	swap_load_command(cmd, 0);
-    }
-    if (cmd->cmd == LC_SEGMENT_64) {
-		struct segment_command_64 *segment = (void *)f->ptr + actual_offset;
-		if (f->isSwap) {
-			swap_segment_command_64(segment, 0);
+	int i;
+	struct load_command *cmd;
+	struct symtab_command *sym;
+
+	i = -1;
+	while(++i < f->ncmds) {
+		cmd = (void *)f->ptr + f->lc_offset;
+		if (f->isSwap) 
+		  	swap_load_command(cmd, 0);
+		if (cmd->cmd == LC_SEGMENT_64) {
+			if (f->isSwap)
+				swap_segment_command_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset), 0);
+			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset), f);
+		} else if (cmd->cmd == LC_SEGMENT) {
+			if (f->isSwap)
+				swap_segment_command((struct segment_command *)((void *)f->ptr + f->lc_offset), 0);
+			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset), f);
+		} else if (cmd->cmd == LC_SYMTAB) {
+			sym = (struct symtab_command *) cmd;
+			print_out(sym->nsyms, sym->symoff, sym->stroff, f);
 		}
-		get_sc_64(segment, f);
-    } else if (cmd->cmd == LC_SEGMENT) {
-		struct segment_command *segment = (void *)f->ptr + actual_offset;
-		if (f->isSwap) {
-			swap_segment_command(segment, 0);
-		}
-    } else if (cmd->cmd == LC_SYMTAB) {
-    	struct symtab_command *sym = (struct symtab_command *) cmd;
-    	print_out(sym->nsyms, sym->symoff, sym->stroff, f);
-    }
-    actual_offset += cmd->cmdsize;
-  }
+		f->lc_offset += cmd->cmdsize;
+	}
 }
 
 
@@ -238,6 +235,9 @@ void handle_header(t_file *f) {
 		if (f->isSwap) {
 		  swap_mach_header_64(header, 0);
 		}
+		if (f->did64)
+			return;
+		f->did64 = 1;
 		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
 	} else {
@@ -246,12 +246,41 @@ void handle_header(t_file *f) {
 		if (f->isSwap) {
 		  swap_mach_header(header, 0);
 		}
+		if (f->did32)
+			return;
+		f->did32 = 1;
 		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
+
 	}
 	dump_segment_commands(f);
 }
 
+
+void handle_fat_header(t_file *file) {
+	struct fat_header *header = (void *)file->ptr;
+	struct fat_arch *arch;
+	void *tmp_ptr;
+
+	int n_arch;
+	int i;
+	tmp_ptr = file->ptr;
+	if (file->isSwap) {
+		n_arch = SWAP32(header->nfat_arch);
+	} else {
+		n_arch = header->nfat_arch;
+	}
+	
+	arch = (void *)header + sizeof(*header);
+	i = -1;
+	while (++i < (n_arch)) {
+		file->ptr = tmp_ptr + SWAP32(arch->offset);
+		get_magic(file);
+		file->lc_offset = 0;
+		arch++;
+	}
+	// print_lst(file->lst, file);
+}
 
 void get_magic(t_file *file) {
 	int magic_number;
@@ -261,10 +290,7 @@ void get_magic(t_file *file) {
 	file->isFat = is_fat(magic_number);
 	file->isSwap = should_swap_bytes(magic_number);
 	if (file->isFat) {
-		ft_printf("FAT\n");
-		// handle_fat_header(file);
-	} else if (!file->is64) {
-		ft_printf("32\n");
+		handle_fat_header(file);
 	} else {
 		handle_header(file);
 	}
@@ -302,6 +328,8 @@ int main(int ac, char **av) {
 	file->section = NULL;
 	file->lst = NULL;
 	file->lst_size = 0;
+	file->did32 = 0;
+	file->did64 = 0;
 	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
 		ft_printf("Error munmap\n");
