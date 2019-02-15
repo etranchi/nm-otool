@@ -1,0 +1,8 @@
+7120c7120
+< 00000000003203f0 s _OBJC_IVAR_$_RTDefaultsManager._userDefaults
+---
+> 00000000003203f0 S _OBJC_IVAR_$_RTDefaultsManager._userDefaults
+7629c7629
+< 00000000003213a0 s _OBJC_IVAR_$_RTPersistenceManager._stores
+---
+> 00000000003213a0 S _OBJC_IVAR_$_RTPersistenceManager._stores
