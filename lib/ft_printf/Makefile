@@ -28,6 +28,7 @@ SRC= ft_printf.c\
 		ft_putwchar.c\
 		checker.c\
 		libft/ft_strlen.c\
+		libft/ft_strsplit.c\
 		libft/ft_putchar.c\
 		libft/ft_atoi.c\
 		libft/ft_isdigit.c\
@@ -40,6 +41,7 @@ SRC= ft_printf.c\
 		libft/ft_strnew.c\
 		libft/ft_strstr.c\
 		libft/ft_strcmp.c\
+		libft/ft_strncmp.c\
 		libft/ft_memdel.c\
 		libft/ft_memalloc.c\
 		libft/ft_strrev.c\

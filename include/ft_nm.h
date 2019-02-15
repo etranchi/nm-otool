@@ -7,7 +7,7 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <stdlib.h>
-
+# include <ar.h>
 
 int		ft_printf(const char *format, ...);
 
@@ -39,6 +39,7 @@ typedef struct s_file
 	int		did64;
 	int		did32;
 	int		ncmds;
+	char 	*archive_name;
 	int		lc_offset;
 	int 	lst_size;
 	int		nsects;

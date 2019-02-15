@@ -255,6 +255,7 @@ void handle_header(t_file *f) {
 	uint32_t ncmds;
 
 	if (f->is64) {
+		printf("64\n");
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
 		if (f->isSwap) {
@@ -263,12 +264,14 @@ void handle_header(t_file *f) {
 		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
 	} else {
+		printf("32\n");
 		size_t header_size = sizeof(struct mach_header);
 		struct mach_header *header = (void *)f->ptr + header_size;
 		if (f->isSwap) {
 		  swap_mach_header(header, 0);
 		}
 		f->ncmds = SWAP32(header->ncmds);
+		printf("%d\n", f->ncmds);
 		f->lc_offset += header_size;
 
 	}
@@ -303,6 +306,32 @@ void handle_fat_header(t_file *file) {
 	}
 }
 
+void handle_archive(t_file *file) {
+	struct ar_hdr *header;
+	uint32_t offset;
+	void *tmp_ptr;
+
+	header = (struct ar_hdr *)(file->ptr + SARMAG);
+	offset = ft_atoi(header->ar_size) + sizeof(struct ar_hdr) + SARMAG + (ft_strlen(ARFMAG)*sizeof(char));
+	printf("%d\n", offset);
+	header = (struct ar_hdr *) ((void *) header + offset);
+	tmp_ptr = file->ptr;
+	while(42) {
+		char **tmp;
+		tmp = ft_strsplit(header->ar_name, '\n');
+		if (!ft_strcmp(header->ar_name, ""))
+			break ;
+		printf("\n%s: (%s)\n", file->archive_name, tmp[1]);	
+		tmp = ft_strsplit(tmp[0], ' ');
+		offset += sizeof(struct ar_hdr) + ft_atoi(header->ar_size);
+		file->ptr = (void *)tmp_ptr + offset;
+		printf("offset %lx\n", offset);
+		get_magic(file);
+		header = (struct ar_hdr *) ((void *) header + offset);
+	}
+	
+}
+
 void get_magic(t_file *file) {
 	int magic_number;
 
@@ -312,7 +341,10 @@ void get_magic(t_file *file) {
 	file->isSwap = should_swap_bytes(magic_number);
 	if (file->isFat) {
 		handle_fat_header(file);
-	} else {
+	} else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0) {
+		handle_archive(file);
+	}
+	else {
 		handle_header(file);
 	}
 }
@@ -332,6 +364,7 @@ int main(int ac, char **av) {
 		return (0);
 	}
 	if ((fd = open(av[1], O_RDONLY)) < 0) {
+
 		ft_printf("Error open\n");
 		return (0);
 	}
@@ -343,6 +376,7 @@ int main(int ac, char **av) {
 		ft_printf("Error mmap\n");
 		return (0);
 	}
+	file->archive_name = av[1];
 	file->ptr = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
