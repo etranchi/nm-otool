@@ -14,6 +14,8 @@ int		ft_printf(const char *format, ...);
 typedef struct s_func {
 	unsigned long	value;
 	char			type;
+	char			tmp_type;
+	char 			*indirect;
 	int				sect;
 	char 			*name;
 	struct s_func *next;

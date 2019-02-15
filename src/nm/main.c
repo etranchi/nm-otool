@@ -64,7 +64,6 @@ void get_right_section(t_func *lst, t_file *file) {
 	t_section *section;
 	int i;
 	int index;
-	char tmp_type;
 	section = file->section;
 	index = 1;
 	while(section)
@@ -73,21 +72,21 @@ void get_right_section(t_func *lst, t_file *file) {
 		while (section->name[++i]){
 			if(lst->sect == index)
 			{
-				tmp_type = lst->type;
+				lst->tmp_type = lst->type;
 				lst->type = section->name[i][2];
-				if (!ft_strcmp(section->name[i], "__text") && (tmp_type & N_EXT))
+				if (!ft_strcmp(section->name[i], "__text") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
 				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
 					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__data"))
 					lst->type = 'd';
-				if (!ft_strcmp(section->name[i], "__data") && (tmp_type & N_EXT))
+				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__common") && tmp_type & N_PEXT)
+				if (!ft_strcmp(section->name[i], "__common") && lst->tmp_type & N_PEXT)
 					lst->type += 32;
 				if (!ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring")|| !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const"))
 					lst->type = 's';
-				if ((!ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__objc_ivar")) && tmp_type & N_EXT) 
+				if ((!ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__objc_ivar")) && lst->tmp_type & N_EXT) 
 					lst->type -= 32;
 				if (!ft_strcmp(section->name[i], "__objc_data"))
 					lst->type = 'S';
@@ -269,7 +268,7 @@ void handle_header(t_file *f) {
 		if (f->isSwap) {
 		  swap_mach_header(header, 0);
 		}
-		f->ncmds = header->ncmds;
+		f->ncmds = SWAP32(header->ncmds);
 		f->lc_offset += header_size;
 
 	}
@@ -294,7 +293,7 @@ void handle_fat_header(t_file *file) {
 	arch = (void *)header + sizeof(*header);
 	i = -1;
 	while (++i < (n_arch)) {
-		if ((arch->cputype == SWAP32(CPU_TYPE_X86) || arch->cputype == SWAP32(CPU_TYPE_X86_64))) {
+		if ((arch->cputype == CPU_TYPE_X86 || SWAP32(arch->cputype) == CPU_TYPE_X86_64)) {
 			file->ptr = tmp_ptr + SWAP32(arch->offset);
 			get_magic(file);
 			file->lc_offset = 0;
