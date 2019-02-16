@@ -76,20 +76,24 @@ void get_right_section(t_func *lst, t_file *file) {
 				lst->type = section->name[i][2];
 				if (!ft_strcmp(section->name[i], "__text") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
+				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
 					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__data"))
 					lst->type = 'd';
 				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__common") && lst->tmp_type & N_PEXT)
-					lst->type += 32;
-				if (!ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring")|| !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const"))
+				if (!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring")|| !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
 					lst->type = 's';
 				if ((!ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__objc_ivar")) && lst->tmp_type & N_EXT) 
 					lst->type -= 32;
+				if (!ft_strcmp(section->name[i], "__common") && lst->tmp_type & N_PEXT)
+					lst->type = 's';
+				if ((!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__xcrun_shim")) && lst->tmp_type & N_EXT) 
+					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__objc_data"))
 					lst->type = 'S';
+				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_PEXT)
+					lst->type = 's';
 				return ;
 			}
 			index++;
@@ -117,6 +121,10 @@ void getType(t_func *lst, t_file *file) {
 		c = 'I';
 	else
 		c = 'U';
+	if (lst->type & N_ABS && lst->type & N_EXT)
+		c = 'A';
+	if (lst->type & N_STAB)
+		lst->name = "";
 	lst->type = (char)c;
 }	
 
@@ -154,6 +162,8 @@ void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 	func->name = stringtable + table.n_un.n_strx;
 	func->type = table.n_type;
 	func->value = table.n_value;
+	if(!ft_strcmp(func->name, ""))
+		func->type = N_UNDF;
 	func->sect = table.n_sect;
 	func->next = NULL;
 	tmp = *lst;
@@ -193,15 +203,16 @@ void print_lst(t_func *lst, t_file *f) {
 
 	tmp = lst;
 	while (lst) {
-
 		getType(lst, f);
-		if (lst->type == 'U')
-			ft_printf("                 ");
-		else {
-			ft_printf("%016lx ", lst->value);
+		if (ft_strlen(lst->name) > 0) {
+			if (lst->type == 'U')
+				ft_printf("                 ");
+			else {
+				ft_printf("%016lx ", lst->value);
+			}
+			ft_printf("%c ", lst->type);	
+			ft_printf("%s\n", lst->name);
 		}
-		ft_printf("%c ", lst->type);	
-		ft_printf("%s\n", lst->name);
 		lst = lst->next;
 	}
 }
@@ -255,7 +266,7 @@ void handle_header(t_file *f) {
 	uint32_t ncmds;
 
 	if (f->is64) {
-		printf("64\n");
+		// printf("64\n");
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
 		if (f->isSwap) {
@@ -264,7 +275,7 @@ void handle_header(t_file *f) {
 		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
 	} else {
-		printf("32\n");
+		// printf("32\n");
 		size_t header_size = sizeof(struct mach_header);
 		struct mach_header *header = (void *)f->ptr + header_size;
 		if (f->isSwap) {
