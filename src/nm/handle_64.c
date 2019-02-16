@@ -129,6 +129,32 @@ void				print_byte_to_hex(char byte)
 }
 
 
+void print_otool_32(struct section *section, t_file *file) {
+	int i;
+	int offset;
+	void *ptr;
+	int j;
+
+	offset = 0;
+	i = -1;
+
+	printf("Contents of (__TEXT,__text) section\n");
+
+	while (offset < section->size) {
+		ptr = file->ptr + section->offset + offset;
+		j = -1;
+		printf("%08llx\t", section->addr + offset);
+		while (++j < 16){
+			print_byte_to_hex(*((char *)file->ptr + section->offset + offset + j));
+			if (j + offset + 1 >= section->size)
+				break ;
+		}
+		printf("\n");
+		offset += 16;
+	}	
+}
+
+
 void print_otool_64(struct section_64 *section, t_file *file) {
 	int i;
 	int offset;
@@ -143,7 +169,7 @@ void print_otool_64(struct section_64 *section, t_file *file) {
 	while (offset < section->size) {
 		ptr = file->ptr + section->offset + offset;
 		j = -1;
-		printf("0000000%llx\t", section->addr + offset);
+		printf("%016llx\t", section->addr + offset);
 		while (++j < 16){
 			print_byte_to_hex(*((char *)file->ptr + section->offset + offset + j));
 			if (j + offset + 1 >= section->size)
@@ -196,9 +222,9 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	sec->next = NULL;
 	i = -1;
 	while (++i < (int)seg->nsects) {
-		// if (!file->nm && !ft_strcmp(section->sectname, "__text")) {
-		// 	print_otool_64(section, file);
-		// }
+		if (!file->nm && !ft_strcmp(section->sectname, "__text")) {
+			print_otool_32(section, file);
+		}
 		if (!(sec->name[i] = ft_strdup(section->sectname))) {
 			return;
 		}
