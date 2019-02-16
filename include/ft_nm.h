@@ -57,4 +57,6 @@ int is_fat(uint32_t magic);
 void get_sc_64(struct segment_command_64 *seg, t_file *file);
 void get_sc_32(struct segment_command *seg, t_file *file);
 void addToSections(t_section **lst, t_section *sec);
+void get_magic(t_file *file);
+
 #endif
