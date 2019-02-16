@@ -333,7 +333,7 @@ void get_right_section(t_func *lst, t_file *file) {
 					lst->type = 's';
 				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_EXT)
 					lst->type = 'S';
-				if (!ft_strcmp(lst->name, "__ZL11_class_name") || !ft_strcmp(lst->name, "__non_lazy_classes"))
+				if (!ft_strcmp(lst->name, "_objc_classes") || !ft_strcmp(lst->name, "__ZL11_class_name") || !ft_strcmp(lst->name, "__non_lazy_classes"))
 					lst->type = 's';
 				return ;
 			}
