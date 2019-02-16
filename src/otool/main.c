@@ -41,7 +41,7 @@ int main(int ac, char **av) {
 		file->did32 = 0;
 		file->did64 = 0;
 		file->nm = 0;
-		printf("%s:\n", av[1]);
+		ft_printf("%s:\n", av[1]);
 		get_magic(file);
 		if (munmap(file->ptr, buf.st_size) < 0) {
 			ft_printf("Error munmap\n");

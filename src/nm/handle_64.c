@@ -125,7 +125,7 @@ void				print_byte_to_hex(char byte)
 			str[count] = (char_hex % 10) + 'a';
 	}
 	
-	printf("%c%c ", str[1], str[0]);
+	ft_printf("%c%c ", str[1], str[0]);
 }
 
 
@@ -138,18 +138,18 @@ void print_otool_32(struct section *section, t_file *file) {
 	offset = 0;
 	i = -1;
 
-	printf("Contents of (__TEXT,__text) section\n");
+	ft_printf("Contents of (__TEXT,__text) section\n");
 
 	while (offset < section->size) {
 		ptr = file->ptr + section->offset + offset;
 		j = -1;
-		printf("%08llx\t", section->addr + offset);
+		ft_printf("%08llx\t", section->addr + offset);
 		while (++j < 16){
 			print_byte_to_hex(*((char *)file->ptr + section->offset + offset + j));
 			if (j + offset + 1 >= section->size)
 				break ;
 		}
-		printf("\n");
+		ft_printf("\n");
 		offset += 16;
 	}	
 }
@@ -164,18 +164,18 @@ void print_otool_64(struct section_64 *section, t_file *file) {
 	offset = 0;
 	i = -1;
 
-	printf("Contents of (__TEXT,__text) section\n");
+	ft_printf("Contents of (__TEXT,__text) section\n");
 
 	while (offset < section->size) {
 		ptr = file->ptr + section->offset + offset;
 		j = -1;
-		printf("%016llx\t", section->addr + offset);
+		ft_printf("%016llx\t", section->addr + offset);
 		while (++j < 16){
 			print_byte_to_hex(*((char *)file->ptr + section->offset + offset + j));
 			if (j + offset + 1 >= section->size)
 				break ;
 		}
-		printf("\n");
+		ft_printf("\n");
 		offset += 16;
 	}	
 }
@@ -384,7 +384,7 @@ void find_best_place(t_func **lst, t_func *to_put) {
 	prev = NULL;
 	while (tmp) {
 		// if ( ft_strcmp(tmp->name, "_exchange_options") == 0 && ft_strcmp(to_put->name, "_exchange_options") == 0 ) {
-		// 	printf("tmp %s toput %s\n", tmp->value, to_put->value);
+		// 	ft_printf("tmp %s toput %s\n", tmp->value, to_put->value);
 		// }
 		if (tmp->name && 
 			(ft_strcmp(tmp->name, to_put->name) > 0 || (ft_strcmp(tmp->name, to_put->name) == 0 && (to_put->value < tmp->value)))) {
@@ -604,7 +604,7 @@ void handle_archive(t_file *file) {
 
 	header = (struct ar_hdr *)(file->ptr + SARMAG);
 	offset = ft_atoi(header->ar_size) + sizeof(struct ar_hdr) + SARMAG + (ft_strlen(ARFMAG)*sizeof(char));
-	printf("%d\n", offset);
+	ft_printf("%d\n", offset);
 	header = (struct ar_hdr *) ((void *) header + offset);
 	tmp_ptr = file->ptr;
 	while(42) {
@@ -612,7 +612,7 @@ void handle_archive(t_file *file) {
 		tmp = ft_strsplit(header->ar_name, '\n');
 		if (!ft_strcmp(header->ar_name, ""))
 			break ;
-		printf("\n%s: (%s)\n", file->archive_name, tmp[1]);	
+		ft_printf("\n%s: (%s)\n", file->archive_name, tmp[1]);	
 		tmp = ft_strsplit(tmp[0], ' ');
 		offset += sizeof(struct ar_hdr) + ft_atoi(header->ar_size);
 		file->ptr = (void *)tmp_ptr + offset;

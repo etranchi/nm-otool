@@ -46,7 +46,7 @@ int main(int ac, char **av) {
 		if (!ft_strcmp(av[0], "./ft_otool") || !ft_strcmp(av[0], "ft_otool") )
 			file->nm = 0;
 		if(!file->nm)
-			printf("%s:\n", av[1]);
+			ft_printf("%s:\n", av[1]);
 		get_magic(file);
 		if (munmap(file->ptr, buf.st_size) < 0) {
 			ft_printf("Error munmap\n");

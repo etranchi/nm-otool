@@ -49,6 +49,7 @@ typedef struct s_file
 	struct s_func 	*lst;
 }				t_file;
 
+int		ft_printf(const char *format, ...);
 void handle_64(t_file *file);
 int is_magic_64(uint32_t magic);
 int should_swap_bytes(uint32_t magic);
