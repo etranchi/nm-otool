@@ -88,7 +88,7 @@ void get_right_section(t_func *lst, t_file *file) {
 					lst->type = 'd';
 				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__thread_bss") || !ft_strcmp(section->name[i], "__thread_vars") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring") || !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
+				if (!ft_strcmp(section->name[i], "__interpose") ||!ft_strcmp(section->name[i], "__objc_const") || !ft_strcmp(section->name[i], "__objc_classname") || !ft_strcmp(section->name[i], "__objc_methname") || !ft_strcmp(section->name[i], "__objc_methtype") || !ft_strcmp(section->name[i], "__objc_nlclslist") || !ft_strcmp(section->name[i], "__objc_opt_rw") || !ft_strcmp(section->name[i], "__objc_opt_ro") || !ft_strcmp(section->name[i], "__thread_bss") || !ft_strcmp(section->name[i], "__thread_vars") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring") || !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
 					lst->type = 's';
 				if (!ft_strcmp(section->name[i], "__thread_vars") && lst->tmp_type & N_PEXT)
 					lst->type = 't';
@@ -98,11 +98,11 @@ void get_right_section(t_func *lst, t_file *file) {
 					lst->type = 's';
 				if ((!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__class")  || !ft_strcmp(section->name[i], "__xcrun_shim")) && lst->tmp_type & N_EXT) 
 					lst->type = 'S';
-				if (!ft_strcmp(section->name[i], "__objc_data"))
-					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__const") && lst->tmp_type & N_PEXT)
 					lst->type = 's';
-				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_PEXT)
+				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_EXT)
+					lst->type = 'S';
+				if (!ft_strcmp(lst->name, "__ZL11_class_name") || !ft_strcmp(lst->name, "__non_lazy_classes"))
 					lst->type = 's';
 				return ;
 			}
@@ -117,7 +117,7 @@ void get_right_section(t_func *lst, t_file *file) {
 void getType(t_func *lst, t_file *file) {
 	char c;
 
-	if (lst->type == N_UNDF || (lst->type & N_TYPE) == N_ABS) {
+	if (lst->type == N_UNDF) {
 		c = 'U';
 		lst->sect = NO_SECT;
 	}
@@ -131,8 +131,14 @@ void getType(t_func *lst, t_file *file) {
 		c = 'I';
 	else
 		c = 'U';
-	if (lst->type & N_ABS && lst->type & N_EXT)
+	if ((lst->type & N_TYPE) == N_INDR) {
+		c = 'I';
+		// printf("yo\n");
+		lst->name = ft_strjoin(lst->name, ft_strjoin(ft_strjoin(" (indirect for ", lst->name), ")"));
+	}
+	if (((lst->type & N_TYPE) == N_ABS) && lst->type & N_EXT) {
 		c = 'A';
+	}
 	if (lst->type & N_STAB)
 		lst->name = "";
 	lst->type = (char)c;
@@ -239,9 +245,9 @@ void print_lst(t_func *lst, t_file *f) {
 	while (lst) {
 		getType(lst, f);
 		if (ft_strlen(lst->name) > 0) {
-			if (lst->type == 'U' && f->mode == 64)
+			if ((lst->type == 'I' || lst->type == 'U') && f->mode == 64)
 				ft_printf("                 ");
-			else if (lst->type == 'U' && f->mode == 32)
+			else if ((lst->type == 'I' || lst->type == 'U') && f->mode == 32)
 				ft_printf("         ");
 			else if (f->mode == 32)
 				ft_printf("%08lx ", lst->value);
