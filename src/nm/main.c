@@ -84,8 +84,6 @@ void get_right_section(t_func *lst, t_file *file) {
 					lst->type -= 32;
 				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
 					lst->type = 'S';
-				if (!ft_strcmp(section->name[i], "__data"))
-					lst->type = 'd';
 				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
 				if (!ft_strcmp(section->name[i], "__interpose") ||!ft_strcmp(section->name[i], "__objc_const") || !ft_strcmp(section->name[i], "__objc_classname") || !ft_strcmp(section->name[i], "__objc_methname") || !ft_strcmp(section->name[i], "__objc_methtype") || !ft_strcmp(section->name[i], "__objc_nlclslist") || !ft_strcmp(section->name[i], "__objc_opt_rw") || !ft_strcmp(section->name[i], "__objc_opt_ro") || !ft_strcmp(section->name[i], "__thread_bss") || !ft_strcmp(section->name[i], "__thread_vars") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring") || !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
@@ -302,7 +300,7 @@ static void dump_segment_commands(t_file *f) {
 			if (f->isSwap)
 				swap_segment_command((struct segment_command *)((void *)f->ptr + f->lc_offset), 0);
 			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset), f);
-		} else if (cmd->cmd == LC_SYMTAB) {
+		} else if (cmd->cmd == LC_SYMTAB && f->nm) {
 			sym = (struct symtab_command *) cmd;
 			print_out(sym->nsyms, sym->symoff, sym->stroff, f);
 		}
@@ -423,6 +421,7 @@ int main(int ac, char **av) {
 		ft_printf("No args..\n");
 		return (0);
 	}
+
 	if ((fd = open(av[1], O_RDONLY)) < 0) {
 
 		ft_printf("Error open\n");
@@ -445,6 +444,11 @@ int main(int ac, char **av) {
 	file->lst_size = 0;
 	file->did32 = 0;
 	file->did64 = 0;
+	file->nm = 1;
+	if (!ft_strcmp(av[0], "./ft_otool"))
+		file->nm = 0;
+	if(!file->nm)
+		printf("%s:\n", av[1]);
 	get_magic(file);
 	if (munmap(file->ptr, buf.st_size) < 0) {
 		ft_printf("Error munmap\n");

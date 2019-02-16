@@ -40,6 +40,7 @@ typedef struct s_file
 	int		did64;
 	int		did32;
 	int		ncmds;
+	int 	nm;
 	char 	*archive_name;
 	int		lc_offset;
 	int 	lst_size;

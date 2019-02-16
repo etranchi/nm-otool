@@ -1,7 +1,6 @@
 NM			= ft_nm
 OTOOL   	= ft_otool
 SRCS_NM		= src/nm/main.c src/nm/handle_64.c
-SRCS_OTOOL 	= src/otool/main.c
 
 OBJS_NM		= 	$(patsubst srcs/%.c,objs/%.o,$(SRCS_NM))
 OBJS_OT		= 	$(patsubst srcs/%.c,objs/%.o,$(SRCS_OTOOL))
@@ -22,7 +21,7 @@ $(NM):	$(OBJS_NM)
 			@ $(CC) $(PRINTF) -o $@ $^
 			@ echo "\n\033[92m---> ft_nm program created ✓\033[0m";
 
-$(OTOOL):	$(OBJS_OT)
+$(OTOOL):	$(OBJS_NM)
 			@ $(CC) $(PRINTF) -o $@ $^
 			@ echo "\n\033[92m---> ft_otool program created ✓\033[0m";
 

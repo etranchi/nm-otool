@@ -1,410 +1,123 @@
-0000000000005177 t +[IASPPhase phaseWithInfo:]
-00000000000051bc t +[IASPPhase phaseWithName:percentage:delay:]
-000000000000521a t +[IASPPhase supportsSecureCoding]
-0000000000002e77 t +[IASPRegistryManager clear]
-0000000000002fa7 t +[IASPRegistryManager currentPhaseName]
-000000000000329a t +[IASPRegistryManager phases]
-0000000000003121 t +[IASPRegistryManager setCurrentPhaseName:]
-00000000000033ff t +[IASPRegistryManager setPhases:]
-0000000000003587 t +[IASPRegistryManager startingPercentage]
-0000000000004ba2 t +[IASUnifiedProgressConnection sharedConnection]
-0000000000004018 t +[IASUnifiedProgressManager sharedManager]
-0000000000005122 t -[IASPPhase dealloc]
-000000000000524f t -[IASPPhase delay]
-0000000000004ca6 t -[IASPPhase description]
-0000000000004d18 t -[IASPPhase encodeWithCoder:]
-0000000000004d99 t -[IASPPhase info]
-0000000000004eab t -[IASPPhase initWithCoder:]
-0000000000004f50 t -[IASPPhase initWithInfo:]
-0000000000005013 t -[IASPPhase initWithName:percentage:delay:]
-0000000000004e97 t -[IASPPhase init]
-0000000000005225 t -[IASPPhase name]
-000000000000523b t -[IASPPhase percentage]
-0000000000004c4b t -[IASUPCaller caller]
-0000000000004c05 t -[IASUPCaller dealloc]
-0000000000004c6d t -[IASUPCaller interruptionHandler]
-0000000000004c5c t -[IASUPCaller setCaller:]
-0000000000004c83 t -[IASUPCaller setInterruptionHandler:]
-000000000000270a t -[IASUnifiedProgressClient _callCompletionHandler]
-0000000000002724 t -[IASUnifiedProgressClient _clientInfo]
-00000000000027e4 t -[IASUnifiedProgressClient _registerConnection]
-0000000000002d05 t -[IASUnifiedProgressClient completionHandler]
-0000000000002c99 t -[IASUnifiedProgressClient connection]
-0000000000002af6 t -[IASUnifiedProgressClient dealloc]
-0000000000002dd2 t -[IASUnifiedProgressClient done]
-0000000000002df5 t -[IASUnifiedProgressClient finished]
-00000000000022f7 t -[IASUnifiedProgressClient hideProgressUI]
-000000000000293c t -[IASUnifiedProgressClient initWithPhaseName:]
-0000000000002405 t -[IASUnifiedProgressClient isShowingUI]
-0000000000002c63 t -[IASUnifiedProgressClient phaseName]
-0000000000002d9c t -[IASUnifiedProgressClient prevAlternateStatus]
-0000000000002d3e t -[IASUnifiedProgressClient prevProgress]
-0000000000002d66 t -[IASUnifiedProgressClient prevStatus]
-00000000000025a0 t -[IASUnifiedProgressClient registerCompletionHandler:]
-0000000000001f72 t -[IASUnifiedProgressClient setAlternateStatus:]
-0000000000002609 t -[IASUnifiedProgressClient setBatteryIsLow:]
-0000000000002d1b t -[IASUnifiedProgressClient setCompletionHandler:]
-0000000000002caf t -[IASUnifiedProgressClient setConnection:]
-0000000000002de5 t -[IASUnifiedProgressClient setDone:]
-00000000000020c6 t -[IASUnifiedProgressClient setDone]
-0000000000002e08 t -[IASUnifiedProgressClient setFinished:]
-0000000000002c79 t -[IASUnifiedProgressClient setPhaseName:]
-0000000000002db2 t -[IASUnifiedProgressClient setPrevAlternateStatus:]
-0000000000002d52 t -[IASUnifiedProgressClient setPrevProgress:]
-0000000000002d7c t -[IASUnifiedProgressClient setPrevStatus:]
-0000000000001cb3 t -[IASUnifiedProgressClient setProgress:animate:]
-0000000000001e1e t -[IASUnifiedProgressClient setStatus:]
-0000000000002ce5 t -[IASUnifiedProgressClient setUuid:]
-0000000000002249 t -[IASUnifiedProgressClient showProgressUI]
-0000000000002ccf t -[IASUnifiedProgressClient uuid]
-0000000000002e65 t -[IASUnifiedProgressClient(Deprecated) abortProgressUI]
-0000000000002e53 t -[IASUnifiedProgressClient(Deprecated) doneWithPhase]
-0000000000002e18 t -[IASUnifiedProgressClient(Deprecated) reportProgress:]
-0000000000002e2f t -[IASUnifiedProgressClient(Deprecated) reportProgress:animate:]
-0000000000002e41 t -[IASUnifiedProgressClient(Deprecated) reportStatus:]
-00000000000040b1 t -[IASUnifiedProgressConnection _fireReleaseTimer:]
-000000000000415f t -[IASUnifiedProgressConnection _startReleaseTimer]
-0000000000004222 t -[IASUnifiedProgressConnection connectionForCaller:]
-0000000000004b0c t -[IASUnifiedProgressConnection dealloc]
-000000000000466f t -[IASUnifiedProgressConnection hasConnectionForCaller:]
-0000000000004add t -[IASUnifiedProgressConnection init]
-000000000000491d t -[IASUnifiedProgressConnection registerCaller:interruptionHandler:]
-00000000000047f4 t -[IASUnifiedProgressConnection releaseConnectionForCaller:]
-00000000000036af t -[IASUnifiedProgressManager _isModernOS]
-0000000000003677 t -[IASUnifiedProgressManager _progressAppProxy]
-0000000000003623 t -[IASUnifiedProgressManager _progressApp]
-0000000000003869 t -[IASUnifiedProgressManager addPhaseNamed:withProgress:]
-000000000000387d t -[IASUnifiedProgressManager addPhaseNamed:withProgress:exitDelay:]
-000000000000399f t -[IASUnifiedProgressManager clear]
-0000000000003a16 t -[IASUnifiedProgressManager currentProgress]
-0000000000003d2d t -[IASUnifiedProgressManager currentlyHasProgressInfo]
-0000000000003e6b t -[IASUnifiedProgressManager currentlyShowingUI]
-0000000000003fb6 t -[IASUnifiedProgressManager dealloc]
-0000000000003f75 t -[IASUnifiedProgressManager init]
-000000000000407b t -[IASUnifiedProgressManager progressAppConnection]
-0000000000004091 t -[IASUnifiedProgressManager setProgressAppConnection:]
-000000000000748c s GCC_except_table11
-00000000000074fc s GCC_except_table15
-000000000000751c s GCC_except_table19
-0000000000007460 s GCC_except_table6
-000000000000753c s GCC_except_table6
-                 U _CFDataGetLength
-                 U _CFRelease
-                 U _CFStringGetCStringPtr
-0000000000005272 T _IASLog
-                 U _IORegistryEntryCreateCFProperty
-                 U _IORegistryEntryFromPath
-                 U _IORegistryEntrySetCFProperty
-                 U _NSDefaultRunLoopMode
-000000000000fdd8 S _OBJC_CLASS_$_IASPPhase
-000000000000fcc0 S _OBJC_CLASS_$_IASPRegistryManager
-000000000000fd38 S _OBJC_CLASS_$_IASUPCaller
-000000000000fc48 S _OBJC_CLASS_$_IASUnifiedProgressClient
-000000000000fd60 S _OBJC_CLASS_$_IASUnifiedProgressConnection
-000000000000fce8 S _OBJC_CLASS_$_IASUnifiedProgressManager
-                 U _OBJC_CLASS_$_NSDate
-                 U _OBJC_CLASS_$_NSDictionary
-                 U _OBJC_CLASS_$_NSMutableArray
-                 U _OBJC_CLASS_$_NSMutableData
-                 U _OBJC_CLASS_$_NSNumber
-                 U _OBJC_CLASS_$_NSObject
-                 U _OBJC_CLASS_$_NSPropertyListSerialization
-                 U _OBJC_CLASS_$_NSRunLoop
-                 U _OBJC_CLASS_$_NSSet
-                 U _OBJC_CLASS_$_NSString
-                 U _OBJC_CLASS_$_NSTimer
-                 U _OBJC_CLASS_$_NSUUID
-                 U _OBJC_CLASS_$_NSXPCConnection
-                 U _OBJC_CLASS_$_NSXPCInterface
-000000000000fc40 s _OBJC_IVAR_$_IASPPhase._delay
-000000000000fc30 s _OBJC_IVAR_$_IASPPhase._name
-000000000000fc38 s _OBJC_IVAR_$_IASPPhase._percentage
-000000000000fc28 s _OBJC_IVAR_$_IASUPCaller._caller
-000000000000fc20 s _OBJC_IVAR_$_IASUPCaller._interruptionHandler
-000000000000fbf8 s _OBJC_IVAR_$_IASUnifiedProgressClient._completionHandler
-000000000000fbd8 s _OBJC_IVAR_$_IASUnifiedProgressClient._connection
-000000000000fbf0 s _OBJC_IVAR_$_IASUnifiedProgressClient._done
-000000000000fbc8 s _OBJC_IVAR_$_IASUnifiedProgressClient._finished
-000000000000fbd0 s _OBJC_IVAR_$_IASUnifiedProgressClient._phaseName
-000000000000fbe8 s _OBJC_IVAR_$_IASUnifiedProgressClient._prevAlternateStatus
-000000000000fbc0 s _OBJC_IVAR_$_IASUnifiedProgressClient._prevProgress
-000000000000fbe0 s _OBJC_IVAR_$_IASUnifiedProgressClient._prevStatus
-000000000000fc00 s _OBJC_IVAR_$_IASUnifiedProgressClient._uuid
-000000000000fc10 S _OBJC_IVAR_$_IASUnifiedProgressConnection._callers
-000000000000fc18 S _OBJC_IVAR_$_IASUnifiedProgressConnection._connection
-000000000000fc08 s _OBJC_IVAR_$_IASUnifiedProgressManager._progressAppConnection
-000000000000fe00 S _OBJC_METACLASS_$_IASPPhase
-000000000000fc98 S _OBJC_METACLASS_$_IASPRegistryManager
-000000000000fdb0 S _OBJC_METACLASS_$_IASUPCaller
-000000000000fc70 S _OBJC_METACLASS_$_IASUnifiedProgressClient
-000000000000fd88 S _OBJC_METACLASS_$_IASUnifiedProgressConnection
-000000000000fd10 S _OBJC_METACLASS_$_IASUnifiedProgressManager
-                 U _OBJC_METACLASS_$_NSObject
-000000000000fe28 s _OBJC_METACLASS_$___ARCLite__
-0000000000005260 T _StartDebugLogging
-0000000000005266 T _StopDebugLogging
-000000000000526c T _WriteDebugLog
-                 U __Block_copy
-                 U __Block_object_assign
-                 U __Block_object_dispose
-                 U __Block_release
-                 U __DefaultRuneLocale
-                 U __NSConcreteGlobalBlock
-                 U __NSConcreteStackBlock
-                 U __Unwind_Resume
-0000000000010300 b __ZGVZL18add_image_hook_ARCPK11mach_headerlE7patches
-0000000000010420 b __ZGVZL22add_image_hook_swiftV1PK11mach_headerlE7patches
-0000000000010230 b __ZGVZL30add_image_hook_autoreleasepoolPK11mach_headerlE7patches
-0000000000009c8c s __ZL11_class_name
-0000000000006ea4 t __ZL12cxxConstructP11objc_object
-0000000000010180 d __ZL12demangleLock
-0000000000006c72 t __ZL13demangledNamePKcb
-0000000000010338 b __ZL14NSString_class
-0000000000006abd t __ZL14initialize_impP11objc_objectP13objc_selector
-00000000000017e2 t __ZL15__ARCLite__loadv
-0000000000006e29 t __ZL16scanMangledFieldRPKcS0_S1_Ri
-00000000000081e2 s __ZL17_load_method_name
-0000000000009f58 s __ZL17_load_method_type
-0000000000006972 t __ZL17transcribeMethodsP10objc_classP15glue_class_ro_t
-00000000000057ce t __ZL18add_image_hook_ARCPK11mach_headerl
-0000000000006ac3 t __ZL18allocateMaybeSwiftP18glue_swift_class_tm
-0000000000005474 t __ZL19patch_lazy_pointersPK11mach_headerP7patch_tm
-00000000000069f6 t __ZL19transcribeProtocolsP10objc_classP15glue_class_ro_t
-0000000000006ed4 t __ZL20fixStringForCoreDataP11objc_object
-0000000000006a41 t __ZL20transcribePropertiesP10objc_classP15glue_class_ro_t
-0000000000005c66 t __ZL21__arclite_objc_retainP11objc_object
-0000000000005acf t __ZL21__arclite_object_copyP11objc_objectm
-0000000000010330 b __ZL22NSConstantString_class
-0000000000005c82 t __ZL22__arclite_objc_releaseP11objc_object
-0000000000005d70 t __ZL22add_image_hook_swiftV1PK11mach_headerl
-0000000000006b53 t __ZL22copySwiftV1MangledNamePKcb
-0000000000010460 b __ZL22original_class_getName
-0000000000010438 b __ZL22original_objc_getClass
-0000000000010200 b __ZL23NSAutoreleasePool_class
-00000000000068e3 t __ZL23__arclite_class_getNameP10objc_class
-0000000000006737 t __ZL23__arclite_objc_getClassPKc
-000000000000fe50 s __ZL24OBJC_CLASS_$___ARCLite__
-00000000000059a3 t __ZL24__arclite_object_setIvarP11objc_objectP9objc_ivarS0_
-0000000000010328 b __ZL25NSMutableDictionary_class
-0000000000010458 b __ZL25original_objc_getProtocol
-0000000000010450 b __ZL25original_objc_lookUpClass
-0000000000010468 b __ZL25original_protocol_getName
-0000000000005c94 t __ZL26__arclite_objc_autoreleaseP11objc_object
-000000000000688b t __ZL26__arclite_objc_getProtocolPKc
-0000000000006836 t __ZL26__arclite_objc_lookUpClassPKc
-0000000000005c78 t __ZL26__arclite_objc_retainBlockP11objc_object
-0000000000005d20 t __ZL26__arclite_objc_storeStrongPP11objc_objectS0_
-00000000000068f8 t __ZL26__arclite_protocol_getNameP8Protocol
-0000000000010440 b __ZL26original_objc_getMetaClass
-000000000000f5e8 s __ZL27OBJC_CLASS_RO_$___ARCLite__
-000000000000678c t __ZL27__arclite_objc_getMetaClassPKc
-0000000000010348 b __ZL27original_NSKKMS_indexForKey
-000000000000604a t __ZL28__arclite_NSKKMS_indexForKeyP11objc_objectP13objc_selectorS0_
-00000000000062d4 t __ZL28__arclite_objc_readClassPairP10objc_classPK15objc_image_info
-0000000000010350 b __ZL28original_NSKKsD_objectForKey
-000000000000609c t __ZL29__arclite_NSKKsD_objectForKeyP11objc_objectP13objc_selectorS0_
-0000000000010310 b __ZL29original_NSManagedObject_init
-0000000000010308 b __ZL30NSUndoManagerProxy_targetClass
-0000000000005f95 t __ZL30__arclite_NSManagedObject_initP11objc_objectP13objc_selector
-00000000000053be t __ZL30add_image_hook_autoreleasepoolPK11mach_headerl
-0000000000006e9e t __ZL30arclite_uninitialized_functionv
-0000000000010448 b __ZL30original_objc_getRequiredClass
-000000000000f5a0 s __ZL31OBJC_METACLASS_RO_$___ARCLite__
-00000000000067e1 t __ZL31__arclite_objc_getRequiredClassPKc
-0000000000010428 b __ZL31original_objc_allocateClassPair
-0000000000010430 b __ZL31original_object_getIndexedIvars
-000000000000f630 s __ZL32OBJC_$_CLASS_METHODS___ARCLite__
-0000000000006644 t __ZL32__arclite_objc_allocateClassPairP10objc_classPKcm
-0000000000005ca6 t __ZL32__arclite_objc_retainAutoreleaseP11objc_object
-00000000000066e3 t __ZL32__arclite_object_getIndexedIvarsP11objc_object
-0000000000010360 b __ZL32original_NSKKsD_setObject_forKey
-0000000000006142 t __ZL33__arclite_NSKKsD_setObject_forKeyP11objc_objectP13objc_selectorS0_S0_
-0000000000005462 t __ZL33__arclite_objc_autoreleasePoolPopPv
-0000000000005449 t __ZL34__arclite_objc_autoreleasePoolPushv
-0000000000010358 b __ZL34original_NSKKsD_removeObjectForKey
-00000000000060ee t __ZL35__arclite_NSKKsD_removeObjectForKeyP11objc_objectP13objc_selectorS0_
-0000000000010320 b __ZL35original_NSManagedObject_allocBatch
-0000000000005fbb t __ZL36__arclite_NSManagedObject_allocBatchP11objc_objectP13objc_selectorPS0_S0_j
-000000000000594a t __ZL36__arclite_object_setInstanceVariableP11objc_objectPKcPv
-0000000000010340 b __ZL36original_NSKKMS_fastIndexForKnownKey
-0000000000010470 b __ZL36original_objc_copyClassNamesForImage
-0000000000005ff8 t __ZL37__arclite_NSKKMS_fastIndexForKnownKeyP11objc_objectP13objc_selectorS0_
-0000000000005cd1 t __ZL37__arclite_objc_autoreleaseReturnValueP11objc_object
-0000000000006910 t __ZL37__arclite_objc_copyClassNamesForImagePKcPj
-0000000000010368 b __ZL40original_NSKKsD_addEntriesFromDictionary
-0000000000010318 b __ZL40original_NSManagedObject_allocWithEntity
-00000000000061ab t __ZL41__arclite_NSKKsD_addEntriesFromDictionaryP11objc_objectP13objc_selectorP12NSDictionary
-0000000000005fa8 t __ZL41__arclite_NSManagedObject_allocWithEntityP11objc_objectP13objc_selectorS0_
-00000000000056fc t __ZL42__arclite_NSArray_objectAtIndexedSubscriptP7NSArrayP13objc_selectorm
-0000000000005f5c t __ZL42__arclite_NSUndoManagerProxy_isKindOfClassP11objc_objectP13objc_selectorP10objc_class
-0000000000005ce3 t __ZL43__arclite_objc_retainAutoreleaseReturnValueP11objc_object
-0000000000005d0e t __ZL44__arclite_objc_retainAutoreleasedReturnValueP11objc_object
-0000000000005770 t __ZL46__arclite_NSDictionary_objectForKeyedSubscriptP12NSDictionaryP13objc_selectorP11objc_object
-0000000000005782 t __ZL47__arclite_NSOrderedSet_objectAtIndexedSubscriptP12NSOrderedSetP13objc_selectorm
-000000000000570e t __ZL53__arclite_NSMutableArray_setObject_atIndexedSubscriptP14NSMutableArrayP13objc_selectorP11objc_objectm
-00000000000057a6 t __ZL58__arclite_NSMutableDictionary__setObject_forKeyedSubscriptP19NSMutableDictionaryP13objc_selectorP11objc_objectS4_
-0000000000005794 t __ZL58__arclite_NSMutableOrderedSet_setObject_atIndexedSubscriptP19NSMutableOrderedSetP13objc_selectorP11objc_objectm
-0000000000010478 b __ZL9Demangled
-0000000000010240 b __ZZL18add_image_hook_ARCPK11mach_headerlE7patches
-0000000000010370 b __ZZL22add_image_hook_swiftV1PK11mach_headerlE7patches
-0000000000010210 b __ZZL30add_image_hook_autoreleasepoolPK11mach_headerlE7patches
-0000000000002c44 t ___35-[IASUnifiedProgressClient dealloc]_block_invoke
-0000000000002549 t ___39-[IASUnifiedProgressClient isShowingUI]_block_invoke
-000000000000370e t ___40-[IASUnifiedProgressManager _isModernOS]_block_invoke
-00000000000037f4 t ___40-[IASUnifiedProgressManager _isModernOS]_block_invoke_2
-0000000000004044 t ___42+[IASUnifiedProgressManager sharedManager]_block_invoke
-0000000000003cf0 t ___44-[IASUnifiedProgressManager currentProgress]_block_invoke
-0000000000002abc t ___46-[IASUnifiedProgressClient initWithPhaseName:]_block_invoke
-00000000000036a9 t ___46-[IASUnifiedProgressManager _progressAppProxy]_block_invoke
-00000000000028bb t ___47-[IASUnifiedProgressClient _registerConnection]_block_invoke
-0000000000003f39 t ___47-[IASUnifiedProgressManager currentlyShowingUI]_block_invoke
-0000000000004bce t ___48+[IASUnifiedProgressConnection sharedConnection]_block_invoke
-00000000000044d6 t ___52-[IASUnifiedProgressConnection connectionForCaller:]_block_invoke
-0000000000003e2f t ___53-[IASUnifiedProgressManager currentlyHasProgressInfo]_block_invoke
-000000000000474e t ___55-[IASUnifiedProgressConnection hasConnectionForCaller:]_block_invoke
-00000000000048c5 t ___59-[IASUnifiedProgressConnection releaseConnectionForCaller:]_block_invoke
-00000000000049d0 t ___67-[IASUnifiedProgressConnection registerCaller:interruptionHandler:]_block_invoke
-0000000000004a28 t ___67-[IASUnifiedProgressConnection registerCaller:interruptionHandler:]_block_invoke.122
-                 U ___CFConstantStringClassReference
-000000000000d2f0 s ___block_descriptor_tmp
-000000000000d3a0 s ___block_descriptor_tmp
-000000000000d500 s ___block_descriptor_tmp
-000000000000d530 s ___block_descriptor_tmp.104
-000000000000d560 s ___block_descriptor_tmp.112
-000000000000d590 s ___block_descriptor_tmp.121
-000000000000d5c0 s ___block_descriptor_tmp.125
-000000000000d3e0 s ___block_descriptor_tmp.13
-000000000000d5f0 s ___block_descriptor_tmp.130
-000000000000d400 s ___block_descriptor_tmp.19
-000000000000d430 s ___block_descriptor_tmp.56
-000000000000d460 s ___block_descriptor_tmp.72
-000000000000d320 s ___block_descriptor_tmp.75
-000000000000d490 s ___block_descriptor_tmp.79
-000000000000d4c0 s ___block_descriptor_tmp.88
-000000000000d340 s ___block_descriptor_tmp.91
-000000000000d360 s ___block_descriptor_tmp.96
-000000000000d380 s ___block_literal_global
-000000000000d3c0 s ___block_literal_global
-000000000000d610 s ___block_literal_global
-000000000000d4e0 s ___block_literal_global.89
-0000000000002576 t ___copy_helper_block_
-000000000000383f t ___copy_helper_block_
-0000000000004645 t ___copy_helper_block_
-0000000000004791 t ___copy_helper_block_.101
-00000000000048f3 t ___copy_helper_block_.109
-00000000000049fe t ___copy_helper_block_.119
-0000000000004ab3 t ___copy_helper_block_.123
-0000000000003d03 t ___copy_helper_block_.53
-0000000000003e41 t ___copy_helper_block_.69
-0000000000003f4b t ___copy_helper_block_.77
-000000000000258d t ___destroy_helper_block_
-0000000000003856 t ___destroy_helper_block_
-000000000000465c t ___destroy_helper_block_
-00000000000047c9 t ___destroy_helper_block_.102
-000000000000490a t ___destroy_helper_block_.110
-0000000000004a15 t ___destroy_helper_block_.120
-0000000000004aca t ___destroy_helper_block_.124
-0000000000003d1a t ___destroy_helper_block_.54
-0000000000003e58 t ___destroy_helper_block_.70
-0000000000003f62 t ___destroy_helper_block_.78
-                 U ___objc_personality_v0
-                 U ___stack_chk_fail
-                 U ___stack_chk_guard
-                 U __dyld_register_func_for_add_image
-00000000000101d0 b __isModernOS.isModernOS
-00000000000101d8 b __isModernOS.onceToken
-000000000000e038 s __non_lazy_classes
-                 U __objc_empty_cache
-                 U __objc_empty_vtable
-                 U _abort
-                 U _asprintf
-                 U _bzero
-                 U _calloc
-                 U _ceilf
-                 U _class_addMethod
-                 U _class_addProperty
-                 U _class_addProtocol
-                 U _class_getInstanceMethod
-                 U _class_getInstanceSize
-                 U _class_getInstanceVariable
-                 U _class_getIvarLayout
-                 U _class_getName
-                 U _class_getSuperclass
-                 U _class_isMetaClass
-                 U _class_replaceMethod
-                 U _class_respondsToSelector
-                 U _dispatch_once
-                 U _dispatch_release
-                 U _dispatch_retain
-                 U _dispatch_semaphore_create
-                 U _dispatch_semaphore_signal
-                 U _dispatch_semaphore_wait
-                 U _dispatch_time
-                 U _free
-00000000000101c0 b _gCurrentPhase
-00000000000101e8 b _gInstallProgressManager
-00000000000101c8 b _gPhases
-                 U _getpid
-                 U _hash_create
-                 U _hash_search
-                 U _ivar_getName
-                 U _ivar_getOffset
-                 U _kCFCoreFoundationVersionNumber
-000000000000d640 S _kIASInstallPhaseConclusionDelayKey
-000000000000d630 S _kIASInstallPhaseNameKey
-000000000000d638 S _kIASInstallPhasePercentageKey
-00000000000100b8 D _kIASUnifedProgressDelegateAnimateKey
-0000000000010078 D _kIASUnifiedProgressDelegateAbortNotificationName
-00000000000100a8 D _kIASUnifiedProgressDelegateAlternateStatusKey
-00000000000100b0 D _kIASUnifiedProgressDelegateBatteryIsLowKey
-0000000000010070 D _kIASUnifiedProgressDelegateDoneNotificationName
-0000000000010090 D _kIASUnifiedProgressDelegatePhaseNameKey
-0000000000010088 D _kIASUnifiedProgressDelegateProcessIDKey
-0000000000010060 D _kIASUnifiedProgressDelegateProgessUpdatedNotificationName
-0000000000010098 D _kIASUnifiedProgressDelegateProgressKey
-00000000000100a0 D _kIASUnifiedProgressDelegateStatusKey
-0000000000010068 D _kIASUnifiedProgressDelegateStatusUpdatedNotificationName
-0000000000010080 D _kIASUnifiedProgressDelegateUUIDKey
-0000000000010058 D _kIASUnifiedProgressManagerServiceName
-                 U _kIOMasterPortDefault
-                 U _malloc
-                 U _memcpy
-                 U _method_setImplementation
-                 U _objc_allocateClassPair
-                 U _objc_autoreleasePoolPush
-                 U _objc_constructInstance
-                 U _objc_copyClassNamesForImage
-                 U _objc_enumerationMutation
-                 U _objc_getClass
-                 U _objc_getMetaClass
-                 U _objc_getProperty
-                 U _objc_getProtocol
-                 U _objc_getRequiredClass
-                 U _objc_initializeClassPair
-                 U _objc_lookUpClass
-                 U _objc_msgSend
-                 U _objc_msgSendSuper2
-                 U _objc_readClassPair
-                 U _objc_registerClassPair
-                 U _objc_retain
-                 U _objc_setProperty
-                 U _object_getClass
-                 U _object_getIndexedIvars
-                 U _object_getIvar
-                 U _object_setIvar
-                 U _property_copyAttributeList
-                 U _protocol_getMethodDescription
-                 U _protocol_getName
-                 U _pthread_mutex_lock
-                 U _pthread_mutex_unlock
-                 U _roundf
-                 U _sel_getUid
-00000000000101f8 b _sharedConnection.gSharedConnection
-00000000000101f0 b _sharedConnection.onceToken
-00000000000101e0 b _sharedManager.onceToken
-                 U _strcmp
-                 U _strlen
-                 U _strncmp
-                 U _sysctlbyname
-                 U _syslog
-                 U dyld_stub_binder
+/bin/cat:
+Contents of (__TEXT,__text) section
+0000000100001568	55 48 89 e5 41 57 41 56 41 55 41 54 53 50 49 89 
+0000000100001578	f6 89 fb 48 8d 35 de 09 00 00 bf 02 00 00 00 e8 
+0000000100001588	f4 07 00 00 4c 8d 3d ce 09 00 00 41 bd 01 00 00 
+0000000100001598	00 4c 8d 25 18 01 00 00 eb 59 44 89 2d b7 0b 00 
+00000001000015a8	00 44 89 2d 94 0b 00 00 eb 49 48 8b 05 77 0a 00 
+00000001000015b8	00 48 8b 38 31 f6 e8 b7 07 00 00 eb 36 c7 05 89 
+00000001000015c8	0b 00 00 01 00 00 00 eb 2a 44 89 2d 78 0b 00 00 
+00000001000015d8	44 89 2d 61 0b 00 00 eb 1a 44 89 2d 78 0b 00 00 
+00000001000015e8	44 89 2d 6d 0b 00 00 eb 0a c7 05 65 0b 00 00 01 
+00000001000015f8	00 00 00 89 df 4c 89 f6 4c 89 fa e8 54 07 00 00 
+0000000100001608	83 f8 6d 7e 1d 83 c0 92 83 f8 08 77 60 49 63 04 
+0000000100001618	84 4c 01 e0 ff e0 c7 05 28 0b 00 00 01 00 00 00 
+0000000100001628	eb d1 83 f8 62 74 a2 83 f8 65 0f 84 6a ff ff ff 
+0000000100001638	83 f8 ff 75 38 48 8b 05 f4 09 00 00 48 63 00 49 
+0000000100001648	8d 3c c6 8b 05 f3 0a 00 00 0b 05 e9 0a 00 00 0b 
+0000000100001658	05 f3 0a 00 00 0b 05 f5 0a 00 00 0b 05 f3 0a 00 
+0000000100001668	00 0b 05 f1 0a 00 00 75 09 31 f6 eb 0a e8 62 00 
+0000000100001678	00 00 be 01 00 00 00 e8 86 00 00 00 48 8b 05 a5 
+0000000100001688	09 00 00 48 8b 38 e8 93 06 00 00 85 c0 75 0b 8b 
+0000000100001698	3d b7 0a 00 00 e8 7e 06 00 00 48 8d 35 c0 08 00 
+00000001000016a8	00 bf 01 00 00 00 31 c0 e8 65 06 00 00 0f 1f 00 
+00000001000016b8	66 ff ff ff bd ff ff ff bd ff ff ff bd ff ff ff 
+00000001000016c8	bd ff ff ff 0d ff ff ff 29 ff ff ff fa fe ff ff 
+00000001000016d8	39 ff ff ff 55 48 89 e5 48 8b 05 39 09 00 00 48 
+00000001000016e8	8b 08 48 8d 3d 7f 08 00 00 be 21 00 00 00 ba 01 
+00000001000016f8	00 00 00 e8 50 06 00 00 bf 01 00 00 00 e8 16 06 
+0000000100001708	00 00 55 48 89 e5 41 57 41 56 41 55 41 54 53 48 
+0000000100001718	81 ec a8 00 00 00 41 89 f6 49 89 fc 48 8b 05 ed 
+0000000100001728	08 00 00 48 8b 00 48 89 45 d0 4d 8b 2c 24 31 db 
+0000000100001738	44 89 b5 3c ff ff ff 4c 89 a5 30 ff ff ff eb 67 
+0000000100001748	83 c0 03 44 89 ff 48 8d b5 40 ff ff ff 89 c2 e8 
+0000000100001758	b8 05 00 00 85 c0 78 24 be 01 00 00 00 44 89 ff 
+0000000100001768	e8 19 06 00 00 83 f8 ff 0f 85 24 01 00 00 31 ff 
+0000000100001778	31 c0 e8 19 06 00 00 e9 16 01 00 00 44 89 ff e8 
+0000000100001788	82 05 00 00 31 c0 48 8d 3d 05 08 00 00 4c 89 ee 
+0000000100001798	e8 fb 05 00 00 b8 01 00 00 00 89 05 ac 09 00 00 
+00000001000017a8	ff c3 e9 64 02 00 00 4d 85 ed 0f 84 d1 00 00 00 
+00000001000017b8	4c 89 ef 48 8d 35 d0 07 00 00 e8 cb 05 00 00 85 
+00000001000017c8	c0 0f 84 ba 00 00 00 4c 89 2d 72 09 00 00 31 f6 
+00000001000017d8	31 c0 4c 89 ef e8 86 05 00 00 41 89 c7 45 85 ff 
+00000001000017e8	0f 89 ac 00 00 00 e8 fd 04 00 00 83 38 66 75 94 
+00000001000017f8	0f 57 c0 0f 29 45 90 0f 29 45 80 0f 29 85 70 ff 
+0000000100001808	ff ff 0f 29 85 60 ff ff ff 0f 29 85 50 ff ff ff 
+0000000100001818	0f 29 85 40 ff ff ff 66 c7 45 a8 00 00 48 c7 45 
+0000000100001828	a0 00 00 00 00 bf 01 00 00 00 be 01 00 00 00 31 
+0000000100001838	d2 e8 4e 05 00 00 41 89 c7 45 85 ff 0f 88 42 ff 
+0000000100001848	ff ff c6 85 41 ff ff ff 01 ba 68 00 00 00 b9 68 
+0000000100001858	00 00 00 48 8d bd 42 ff ff ff 4c 89 ee e8 98 04 
+0000000100001868	00 00 89 c1 83 e1 f8 48 83 f9 68 0f 82 cf fe ff 
+0000000100001878	ff e8 72 04 00 00 c7 00 3f 00 00 00 e9 03 ff ff 
+0000000100001888	ff 48 8d 05 04 07 00 00 48 89 05 b1 08 00 00 45 
+0000000100001898	31 ff 45 85 f6 74 32 45 85 ff 74 5a 44 89 ff 48 
+00000001000018a8	8d 35 ef 06 00 00 e8 79 04 00 00 41 89 df 48 89 
+00000001000018b8	c3 48 89 df e8 c7 01 00 00 48 89 df 44 89 fb e8 
+00000001000018c8	5a 04 00 00 e9 31 01 00 00 48 8b 05 58 07 00 00 
+00000001000018d8	48 8b 38 e8 5e 04 00 00 41 89 c4 48 8b 05 4e 08 
+00000001000018e8	00 00 48 85 c0 89 9d 38 ff ff ff 74 1d 48 8b 1d 
+00000001000018f8	34 08 00 00 eb 5b 48 8b 05 23 07 00 00 48 8b 38 
+0000000100001908	e8 7b 01 00 00 e9 f0 00 00 00 44 89 e7 48 8d b5 
+0000000100001918	40 ff ff ff e8 29 04 00 00 85 c0 0f 85 3c 01 00 
+0000000100001928	00 8b 5d b0 81 fb ff 03 00 00 b8 00 04 00 00 0f 
+0000000100001938	4e d8 48 89 1d ef 07 00 00 48 89 df e8 19 04 00 
+0000000100001948	00 48 89 05 e8 07 00 00 48 85 c0 0f 84 26 01 00 
+0000000100001958	00 44 89 ff 48 89 c6 48 89 da e8 0d 04 00 00 49 
+0000000100001968	89 c6 4d 85 f6 7e 4e 31 db 48 63 db 48 8b 35 bd 
+0000000100001978	07 00 00 48 01 de 44 89 e7 4c 89 f2 e8 15 04 00 
+0000000100001988	00 48 85 c0 0f 88 c0 00 00 00 48 01 c3 49 29 c6 
+0000000100001998	75 d7 48 8b 35 97 07 00 00 48 8b 15 88 07 00 00 
+00000001000019a8	44 89 ff e8 c4 03 00 00 49 89 c6 bb 00 00 00 00 
+00000001000019b8	4d 85 f6 7f b4 4d 85 f6 79 1f 48 8b 35 7f 07 00 
+00000001000019c8	00 31 c0 48 8d 3d c8 05 00 00 e8 c1 03 00 00 c7 
+00000001000019d8	05 73 07 00 00 01 00 00 00 45 85 ff 44 8b b5 3c 
+00000001000019e8	ff ff ff 4c 8b a5 30 ff ff ff 8b 9d 38 ff ff ff 
+00000001000019f8	74 08 44 89 ff e8 0c 03 00 00 31 c0 4d 85 ed 0f 
+0000000100001a08	95 c1 4d 85 ed 74 1c 88 c8 01 c3 48 63 c3 4d 8b 
+0000000100001a18	2c c4 85 c0 0f 84 8d fd ff ff 4d 85 ed 0f 85 84 
+0000000100001a28	fd ff ff 48 8b 05 e6 05 00 00 48 8b 00 48 3b 45 
+0000000100001a38	d0 75 12 48 81 c4 a8 00 00 00 5b 41 5c 41 5d 41 
+0000000100001a48	5e 41 5f 5d c3 e8 aa 02 00 00 48 8d 35 10 05 00 
+0000000100001a58	00 bf 01 00 00 00 31 c0 e8 b5 02 00 00 48 8b 15 
+0000000100001a68	dc 06 00 00 48 8d 35 27 05 00 00 bf 01 00 00 00 
+0000000100001a78	31 c0 e8 9b 02 00 00 48 8d 35 1e 05 00 00 eb d1 
+0000000100001a88	55 48 89 e5 41 57 41 56 41 55 41 54 53 50 49 89 
+0000000100001a98	fc 48 8b 1d 88 05 00 00 4c 39 23 75 14 4c 89 e7 
+0000000100001aa8	e8 85 02 00 00 85 c0 74 08 48 8b 3b e8 4f 02 00 
+0000000100001ab8	00 4c 89 e7 e8 95 02 00 00 41 89 c5 41 83 fd ff 
+0000000100001ac8	0f 84 b9 01 00 00 bb 0a 00 00 00 45 31 ff 31 c0 
+0000000100001ad8	83 fb 0a 75 24 83 3d 74 06 00 00 00 74 20 45 31 
+0000000100001ae8	f6 41 83 fd 0a 75 22 85 c0 74 18 41 bd 0a 00 00 
+0000000100001af8	00 41 89 c6 e9 6b 01 00 00 41 89 c6 eb 55 41 89 
+0000000100001b08	c6 eb 06 41 be 01 00 00 00 83 3d 38 06 00 00 00 
+0000000100001b18	74 41 41 83 fd 0a 75 0a 8b 05 1a 06 00 00 85 c0 
+0000000100001b28	75 3d 48 8b 05 ff 04 00 00 48 89 c3 48 8b 3b 41 
+0000000100001b38	ff c7 31 c0 48 8d 35 5c 04 00 00 44 89 fa e8 f9 
+0000000100001b48	01 00 00 48 8b 3b e8 e5 01 00 00 85 c0 0f 85 2c 
+0000000100001b58	01 00 00 41 83 fd 09 74 31 41 83 fd 0a 75 5c 41 
+0000000100001b68	bd 0a 00 00 00 83 3d d0 05 00 00 00 0f 84 e5 00 
+0000000100001b78	00 00 bf 24 00 00 00 e8 ea 01 00 00 83 f8 ff 0f 
+0000000100001b88	85 d2 00 00 00 e9 f5 00 00 00 83 3d c3 05 00 00 
+0000000100001b98	00 74 5e bf 5e 00 00 00 e8 c9 01 00 00 83 f8 ff 
+0000000100001ba8	0f 84 d9 00 00 00 bf 49 00 00 00 e8 b6 01 00 00 
+0000000100001bb8	41 bd 09 00 00 00 e9 a4 00 00 00 83 3d 96 05 00 
+0000000100001bc8	00 00 0f 84 8f 00 00 00 41 81 fd 80 00 00 00 72 
+0000000100001bd8	4a be 00 00 04 00 44 89 ef e8 10 01 00 00 85 c0 
+0000000100001be8	74 17 be 00 02 00 00 44 89 ef e8 ff 00 00 00 eb 
+0000000100001bf8	3f 41 bd 09 00 00 00 eb 5e bf 4d 00 00 00 e8 63 
+0000000100001c08	01 00 00 83 f8 ff 74 77 bf 2d 00 00 00 e8 54 01 
+0000000100001c18	00 00 83 f8 ff 74 68 41 83 e5 7f 49 63 c5 48 8b 
+0000000100001c28	0d e3 03 00 00 8b 44 81 3c b9 00 02 00 00 21 c8 
+0000000100001c38	85 c0 74 23 bf 5e 00 00 00 e8 28 01 00 00 83 f8 
+0000000100001c48	ff 74 3c 44 89 ef 83 cf 40 41 83 fd 7f b8 3f 00 
+0000000100001c58	00 00 0f 44 f8 eb 03 44 89 ef e8 07 01 00 00 83 
+0000000100001c68	f8 ff 74 1b 44 89 eb 4c 89 e7 e8 df 00 00 00 41 
+0000000100001c78	89 c5 44 89 f0 41 83 fd ff 0f 85 51 fe ff ff 4c 
+0000000100001c88	89 e7 e8 a9 00 00 00 85 c0 74 27 48 8b 35 ae 04 
+0000000100001c98	00 00 48 8d 3d f9 02 00 00 31 c0 e8 f0 00 00 00 
+0000000100001ca8	c7 05 a2 04 00 00 01 00 00 00 4c 89 e7 e8 4e 00 
+0000000100001cb8	00 00 48 8b 05 6f 03 00 00 48 8b 38 e8 6f 00 00 
+0000000100001cc8	00 85 c0 75 0f 48 83 c4 08 5b 41 5c 41 5d 41 5e 
+0000000100001cd8	41 5f 5d c3 48 8d 35 86 02 00 00 bf 01 00 00 00 
+0000000100001ce8	31 c0 e8 2b 00 00 00 
