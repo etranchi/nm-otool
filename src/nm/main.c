@@ -8,6 +8,12 @@
 void get_magic(t_file *file);
 
 
+int	swap_uint16(int n)
+{
+	n = ((n << 8) & 0xFF00FF00) | ((n >> 8) & 0xFF00FF);
+	return ((n << 16) | (n >> 16));
+}
+
 
 
 void swap_value(t_func *first, t_func *second) {
@@ -82,16 +88,20 @@ void get_right_section(t_func *lst, t_file *file) {
 					lst->type = 'd';
 				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring")|| !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
+				if (!ft_strcmp(section->name[i], "__thread_bss") || !ft_strcmp(section->name[i], "__thread_vars") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring") || !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
 					lst->type = 's';
+				if (!ft_strcmp(section->name[i], "__thread_vars") && lst->tmp_type & N_PEXT)
+					lst->type = 't';
 				if ((!ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__objc_ivar")) && lst->tmp_type & N_EXT) 
 					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__common") && lst->tmp_type & N_PEXT)
+				if (!ft_strcmp(section->name[i], "__common") && (lst->tmp_type & N_PEXT || lst->tmp_type & N_EXT)) 
 					lst->type = 's';
-				if ((!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__xcrun_shim")) && lst->tmp_type & N_EXT) 
+				if ((!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__class")  || !ft_strcmp(section->name[i], "__xcrun_shim")) && lst->tmp_type & N_EXT) 
 					lst->type = 'S';
 				if (!ft_strcmp(section->name[i], "__objc_data"))
 					lst->type = 'S';
+				if (!ft_strcmp(section->name[i], "__const") && lst->tmp_type & N_PEXT)
+					lst->type = 's';
 				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_PEXT)
 					lst->type = 's';
 				return ;
@@ -136,7 +146,11 @@ void find_best_place(t_func **lst, t_func *to_put) {
 	tmp = (*lst);
 	prev = NULL;
 	while (tmp) {
-		if (ft_strcmp(tmp->name, to_put->name) > 0 || (ft_strcmp(tmp->name, to_put->name) == 0 && ft_strlen(to_put->name) < ft_strlen(tmp->name))) {
+		// if ( ft_strcmp(tmp->name, "_exchange_options") == 0 && ft_strcmp(to_put->name, "_exchange_options") == 0 ) {
+		// 	printf("tmp %s toput %s\n", tmp->value, to_put->value);
+		// }
+		if (tmp->name && 
+			(ft_strcmp(tmp->name, to_put->name) > 0 || (ft_strcmp(tmp->name, to_put->name) == 0 && (to_put->value < tmp->value)))) {
 			if (prev) {
 				prev->next = to_put;
 				to_put->next = tmp;
@@ -152,10 +166,34 @@ void find_best_place(t_func **lst, t_func *to_put) {
 	prev->next = to_put;
 }
 
-void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
+void addTo32(t_func **lst, char *stringtable, struct nlist table) {
 	t_func *func;
 	t_func *tmp;
 
+	
+	if (ft_strstr((stringtable + table.n_un.n_strx), "radr://"))
+			return ;
+	func = malloc(sizeof(t_func));
+	func->name = ft_strdup(stringtable + table.n_un.n_strx);
+	func->type = table.n_type;
+	func->value = table.n_value;
+	if(!ft_strcmp(func->name, ""))
+		func->type = N_UNDF;
+	func->sect = table.n_sect;
+	func->next = NULL;
+	tmp = *lst;
+	if (!tmp) {
+		*lst = func;
+	} else {
+		find_best_place(lst, func);
+	}
+}
+
+void addTo64(t_func **lst, char *stringtable, struct nlist_64 table) {
+	t_func *func;
+	t_func *tmp;
+
+	
 	if (ft_strstr((stringtable + table.n_un.n_strx), "radr://"))
 			return ;
 	func = malloc(sizeof(t_func));
@@ -169,12 +207,8 @@ void addTo(t_func **lst, char *stringtable, struct nlist_64 table) {
 	tmp = *lst;
 	if (!tmp) {
 		*lst = func;
-		return;
 	} else {
 		find_best_place(lst, func);
-		// while (tmp && tmp->next)
-		// 	tmp = tmp->next;
-		// tmp->next = func;
 	}
 }
 
@@ -205,8 +239,12 @@ void print_lst(t_func *lst, t_file *f) {
 	while (lst) {
 		getType(lst, f);
 		if (ft_strlen(lst->name) > 0) {
-			if (lst->type == 'U')
+			if (lst->type == 'U' && f->mode == 64)
 				ft_printf("                 ");
+			else if (lst->type == 'U' && f->mode == 32)
+				ft_printf("         ");
+			else if (f->mode == 32)
+				ft_printf("%08lx ", lst->value);
 			else {
 				ft_printf("%016lx ", lst->value);
 			}
@@ -220,13 +258,18 @@ void print_lst(t_func *lst, t_file *f) {
 void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 	int i;
 	char *stringtable;
-	struct nlist_64 *array;
-
+	struct nlist_64 *array64;
+	struct nlist 	*array32;
 	i = -1;
-	array = (void *)f->ptr + symoff;
+
+	if (f->mode == 64) 
+		array64 = (void *)f->ptr + symoff;
+	else 
+		array32 = (void *)f->ptr + symoff;
 	stringtable = (void *)f->ptr + stroff;
-	while (++i < nsyms)
-		addTo(&f->lst, stringtable, array[i]);
+	while (++i < nsyms) {
+		f->mode == 64 ? addTo64(&f->lst, stringtable, array64[i]) :  addTo32(&f->lst, stringtable, array32[i]);
+	}
 	// sort_name(&f->lst);
 	if (!f->isFat)
 		print_lst(f->lst, f);
@@ -272,17 +315,17 @@ void handle_header(t_file *f) {
 		if (f->isSwap) {
 		  swap_mach_header_64(header, 0);
 		}
+		f->mode = 64;
 		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
 	} else {
-		// printf("32\n");
 		size_t header_size = sizeof(struct mach_header);
-		struct mach_header *header = (void *)f->ptr + header_size;
+		struct mach_header *header = (void *)f->ptr;
 		if (f->isSwap) {
 		  swap_mach_header(header, 0);
 		}
-		f->ncmds = SWAP32(header->ncmds);
-		printf("%d\n", f->ncmds);
+		f->mode = 32;
+		f->ncmds = header->ncmds;
 		f->lc_offset += header_size;
 
 	}

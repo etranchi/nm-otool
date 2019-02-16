@@ -35,6 +35,7 @@ typedef struct s_file
 	int 	is64;
 	int 	isSwap;
 	int 	isFat;
+	int 	mode;
 	int 	done;
 	int		did64;
 	int		did32;
