@@ -16,94 +16,17 @@ int is_magic_64(uint32_t magic) {
   return magic == MH_MAGIC_64 || magic == MH_CIGAM_64;
 }
 
+
+int is_magic_32(uint32_t magic) {
+  return magic == MH_MAGIC || magic == MH_CIGAM;
+}
+
 int should_swap_bytes(uint32_t magic) {
   return magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM;
 }
 
 int is_fat(uint32_t magic) {
   return magic == FAT_MAGIC || magic == FAT_CIGAM;
-}
-
-void	ft_putnbr_hex(int octet, int rem)
-{
-	char const *base = "0123456789abcdef";
-
-	if (rem > 1)
-		ft_putnbr_hex(octet >> 2, rem - 1);
-	write(1, base + (octet % 16), 1);
-}
-
-void	sp_putchar(unsigned char const *ptr)
-{
-	char const c = *ptr;
-
-	if (' ' <= c && c <= '~')
-		write(1, ptr, 1);
-	else
-		write(1, ".", 1);
-}
-
-void	print_memory(const void *addr, size_t size)
-{
-	size_t i;
-	size_t a;
-	unsigned char const *ptr = addr;
-
-	i = 0;
-	while (i < size)
-	{
-		a = 0;
-		while (a < 16 && a + i < size)
-		{
-			ft_putnbr_hex(*(ptr + i + a), 2);
-			write(1, " ", 1);
-			a++;
-		}
-		while (a < 16)
-		{
-			write(1, "  ", 2);
-			if (a % 2)
-				write(1, " ", 1);
-			a++;
-		}
-		i += 16;
-	}
-}
-void hexDump (void *addr, int len) {
-    int i;
-    unsigned char buff[17];       // stores the ASCII data
-    unsigned char *pc = addr;     // cast to make the code cleaner.
-
-
-    // Process every byte in the data.
-
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
-
-        if ((i % 16) == 0) {
-            // Just don't print ASCII for the zeroth line.
-
-            if (i != 0)
-                printf ("  %s\n", buff);
-
-            // Output the offset.
-
-            printf ("  %04x ", i);
-        }
-
-        // Now the hex code for the specific character.
-
-        printf (" %02x", pc[i]);
-
-        // And store a printable ASCII character for later.
-
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-            buff[i % 16] = '.';
-        else
-            buff[i % 16] = pc[i];
-        buff[(i % 16) + 1] = '\0';
-    }
-
 }
 
 void				print_byte_to_hex(char byte)
@@ -610,6 +533,7 @@ void get_magic(t_file *file) {
 
 	magic_number = *(int *)file->ptr;
 	file->is64 = is_magic_64(magic_number);
+	file->is32 = is_magic_32(magic_number);
 	file->isFat = is_fat(magic_number);
 	file->isSwap = should_swap_bytes(magic_number);
 	if (file->isFat) {
@@ -617,7 +541,7 @@ void get_magic(t_file *file) {
 	} else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0) {
 		handle_archive(file);
 	}
-	else {
+	else if (file->is64 || file->is32) {	
 		handle_header(file);
 	}
 }

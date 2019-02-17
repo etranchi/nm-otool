@@ -33,6 +33,7 @@ typedef struct s_file
 	void	*ptr;
 	int		ptr_size;
 	int 	is64;
+	int 	is32;
 	int 	isSwap;
 	int 	isFat;
 	int 	mode;

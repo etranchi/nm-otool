@@ -1,4 +1,5 @@
-0000000100000000 T __mh_execute_header
+cffa edfe 0700 0001 0300 0080 0200 0000
+0f00 0000 6005 0000 8500 2000 0000 0000
 0000000100001620 T _addTo
 0000000100001a30 t _dump_segment_commands
                  U _fstat$INODE64
