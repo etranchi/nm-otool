@@ -523,21 +523,28 @@ static void dump_segment_commands(t_file *f) {
 	i = -1;
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset;
-		if (f->isSwap) 
+		// if ((uint32_t)cmd->cmdsize > (uint32_t)f->sizeofcmds){
+		//  	f->lc_offset += ;
+		//  	cmd->cmd = 0;
+		// }			
+		if (f->isSwap)  
 		  	swap_load_command(cmd, 0);
-		if (cmd->cmd == LC_SEGMENT_64) {
+		if (cmd->cmd && cmd->cmd == LC_SEGMENT_64) {
 			if (f->isSwap)
 				swap_segment_command_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset), 0);
 			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset), f);
-		} else if (cmd->cmd == LC_SEGMENT) {
+		} else if (cmd->cmd && cmd->cmd == LC_SEGMENT) {
 			if (f->isSwap)
 				swap_segment_command((struct segment_command *)((void *)f->ptr + f->lc_offset), 0);
 			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset), f);
-		} else if (cmd->cmd == LC_SYMTAB && f->nm) {
+		} else if (cmd->cmd && cmd->cmd == LC_SYMTAB && f->nm) {
 			sym = (struct symtab_command *) cmd;
 			print_out(sym->nsyms, sym->symoff, sym->stroff, f);
 		}
+		// printf("je passe une fois\n");
+		
 		f->lc_offset += cmd->cmdsize;
+			
 	}
 }
 
@@ -546,7 +553,6 @@ void handle_header(t_file *f) {
 	uint32_t ncmds;
 
 	if (f->is64) {
-		// printf("64\n");
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
 		if (f->isSwap) {
@@ -554,7 +560,8 @@ void handle_header(t_file *f) {
 		}
 		f->mode = 64;
 		f->ncmds = header->ncmds;
-		f->lc_offset += header_size;
+		f->lc_offset = header_size;
+		f->sizeofcmds = header->sizeofcmds;
 	} else {
 		size_t header_size = sizeof(struct mach_header);
 		struct mach_header *header = (void *)f->ptr;
@@ -563,7 +570,7 @@ void handle_header(t_file *f) {
 		}
 		f->mode = 32;
 		f->ncmds = header->ncmds;
-		f->lc_offset += header_size;
+		f->lc_offset = header_size;
 
 	}
 	dump_segment_commands(f);
@@ -597,30 +604,6 @@ void handle_fat_header(t_file *file) {
 	}
 }
 
-void handle_archive(t_file *file) {
-	struct ar_hdr *header;
-	uint32_t offset;
-	void *tmp_ptr;
-
-	header = (struct ar_hdr *)(file->ptr + SARMAG);
-	offset = ft_atoi(header->ar_size) + sizeof(struct ar_hdr) + SARMAG + (ft_strlen(ARFMAG)*sizeof(char));
-	ft_printf("%d\n", offset);
-	header = (struct ar_hdr *) ((void *) header + offset);
-	tmp_ptr = file->ptr;
-	while(42) {
-		char **tmp;
-		tmp = ft_strsplit(header->ar_name, '\n');
-		if (!ft_strcmp(header->ar_name, ""))
-			break ;
-		ft_printf("\n%s: (%s)\n", file->archive_name, tmp[1]);	
-		tmp = ft_strsplit(tmp[0], ' ');
-		offset += sizeof(struct ar_hdr) + ft_atoi(header->ar_size);
-		file->ptr = (void *)tmp_ptr + offset;
-		get_magic(file);
-		header = (struct ar_hdr *) ((void *) header + offset);
-	}
-	
-}
 
 void get_magic(t_file *file) {
 	int magic_number;

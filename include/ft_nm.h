@@ -40,6 +40,7 @@ typedef struct s_file
 	int		did64;
 	int		did32;
 	int		ncmds;
+	uint32_t 	sizeofcmds;
 	int 	nm;
 	char 	*archive_name;
 	int		lc_offset;
@@ -59,5 +60,6 @@ void get_sc_64(struct segment_command_64 *seg, t_file *file);
 void get_sc_32(struct segment_command *seg, t_file *file);
 void addToSections(t_section **lst, t_section *sec);
 void get_magic(t_file *file);
+void handle_archive(t_file *file);
 
 #endif
