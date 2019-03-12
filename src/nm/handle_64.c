@@ -446,10 +446,7 @@ static void dump_segment_commands(t_file *f) {
 	i = -1;
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset;
-		// if ((uint32_t)cmd->cmdsize > (uint32_t)f->sizeofcmds){
-		//  	f->lc_offset += ;
-		//  	cmd->cmd = 0;
-		// }			
+			
 		if (f->isSwap)  
 		  	swap_load_command(cmd, 0);
 		if (cmd->cmd && cmd->cmd == LC_SEGMENT_64) {
@@ -463,9 +460,7 @@ static void dump_segment_commands(t_file *f) {
 		} else if (cmd->cmd && cmd->cmd == LC_SYMTAB && f->nm) {
 			sym = (struct symtab_command *) cmd;
 			print_out(sym->nsyms, sym->symoff, sym->stroff, f);
-		}
-		// printf("je passe une fois\n");
-		
+		}		
 		f->lc_offset += cmd->cmdsize;
 			
 	}
@@ -504,6 +499,7 @@ void handle_fat_header(t_file *file) {
 	struct fat_header *header = (void *)file->ptr;
 	struct fat_arch *arch;
 	void *tmp_ptr;
+	int ppc;
 
 	int n_arch;
 	int i;
@@ -516,8 +512,19 @@ void handle_fat_header(t_file *file) {
 	
 	arch = (void *)header + sizeof(*header);
 	i = -1;
+	file->ppc = NULL;
 	while (++i < (n_arch)) {
-		if ((arch->cputype == CPU_TYPE_X86 || SWAP32(arch->cputype) == CPU_TYPE_X86_64)) {
+		if (SWAP32(arch->cputype) == CPU_TYPE_POWERPC)
+			ppc = file->ptr + SWAP32(arch->offset);
+		 if ((arch->cputype == CPU_TYPE_X86 || SWAP32(arch->cputype) == CPU_TYPE_X86_64) || (SWAP32(arch->cputype) == CPU_TYPE_I386 && i == n_arch - 1) || SWAP32(arch->cputype) == CPU_TYPE_POWERPC) {
+		 	if (SWAP32(arch->cputype) == CPU_TYPE_POWERPC) {
+				ppc = 1;
+				ft_printf("\n%s (for architecture ppc):\n", file->archive_name);
+		 	}
+			if (SWAP32(arch->cputype) == CPU_TYPE_I386 && !ppc)  
+				ft_printf("%s:\n", file->archive_name);
+			if (SWAP32(arch->cputype) == CPU_TYPE_I386 && ppc)  
+				ft_printf("\n%s (for architecture i386):\n", file->archive_name);
 			file->ptr = tmp_ptr + SWAP32(arch->offset);
 			get_magic(file);
 			file->lc_offset = 0;

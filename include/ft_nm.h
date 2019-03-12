@@ -41,12 +41,14 @@ typedef struct s_file
 	int		did64;
 	int		did32;
 	int		ncmds;
+	void 	*ppc;
 	uint32_t 	sizeofcmds;
 	int 	nm;
 	char 	*archive_name;
 	int		lc_offset;
 	int 	lst_size;
 	int		nsects;
+	int 	buff_size;
 	t_section 	*section;
 	struct s_func 	*lst;
 }				t_file;
