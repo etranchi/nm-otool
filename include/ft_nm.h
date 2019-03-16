@@ -64,5 +64,7 @@ void get_sc_32(struct segment_command *seg, t_file *file);
 void addToSections(t_section **lst, t_section *sec);
 void get_magic(t_file *file);
 void handle_archive(t_file *file);
+void handle_fat_header(t_file *file);
+void get_magic(t_file *file);
 
 #endif
