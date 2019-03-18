@@ -43,6 +43,7 @@ typedef struct s_file
 	int		did32;
 	int		ncmds;
 	int		ppc;
+	int 	corrupted;
 	uint32_t 	sizeofcmds;
 	int 	nm;
 	char 	*archive_name;
@@ -67,6 +68,6 @@ void get_magic(t_file *file);
 void handle_archive(t_file *file);
 void handle_fat_header(t_file *file);
 void get_magic(t_file *file);
-void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset);
+void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset, t_file *f);
 
 #endif
