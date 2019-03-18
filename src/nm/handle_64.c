@@ -425,21 +425,22 @@ void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset,
 	t_func *func;
 	t_func *tmp;
 	char *array_string;
-
+	char *tmp_name;
 	printf("%u\n", table.n_un.n_strx);
 	printf("%d\n", offset);
 	int i = -1;
 	array_string = stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
+	tmp_name = malloc(sizeof(char) * (offset + 1));
+	tmp_name[offset] = '\0';
 	while (++i < (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx) && array_string[i])
-		printf("%c\n", array_string[i]);
-	// if (ft_strnstr(array_string, "radr://"))
-	//    	return ;
+		tmp_name[i] = array_string[i];
+	tmp_name[i] = '\0';
+	if (ft_strnstr( "radr://", tmp_name ,i - 1))
+	    return ;
 	func = malloc(sizeof(t_func));
 	func->name = malloc(sizeof(char) * (i + 1));
 	func->name[i] = '\0';
-	// func->name = stringtable + table.n_un.n_strx, offset - (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
-	ft_strncpy(func->name, stringtable + table.n_un.n_strx, i);
-	//ft_memcpy(func->name, array_string, i);
+	ft_strncpy(func->name, tmp_name, ft_strlen(tmp_name));
 	func->type = table.n_type;
 	func->value = table.n_value;
 	if(!ft_strcmp(func->name, ""))
