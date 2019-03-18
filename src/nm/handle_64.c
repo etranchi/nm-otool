@@ -322,12 +322,12 @@ void find_best_place(t_func **lst, t_func *to_put) {
 	prev->next = to_put;
 }
 
-void addTo32(t_func **lst, char *stringtable, struct nlist table) {
+void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset) {
 	t_func *func;
 	t_func *tmp;
 
-	if (ft_strstr((stringtable + table.n_un.n_strx), "radr://"))
-			return ;
+	if (ft_strnstr(stringtable + table.n_un.n_strx, "radr://", offset))
+	 		return ;
 	func = malloc(sizeof(t_func));
 	func->type = table.n_type;
 	func->name = ft_strdup(stringtable + table.n_un.n_strx);
@@ -346,28 +346,7 @@ void addTo32(t_func **lst, char *stringtable, struct nlist table) {
 	}
 }
 
-void addTo64(t_func **lst, char *stringtable, struct nlist_64 table) {
-	t_func *func;
-	t_func *tmp;
 
-	if (ft_strstr((stringtable + table.n_un.n_strx), "radr://"))
-	 		return ;
-	func = malloc(sizeof(t_func));
-	func->name = stringtable + table.n_un.n_strx;
-	printf("%s\n", func->name);
-	func->type = table.n_type;
-	func->value = table.n_value;
-	if(!ft_strcmp(func->name, ""))
-		func->type = N_UNDF;
-	func->sect = table.n_sect;
-	func->next = NULL;
-	tmp = *lst;
-	if (!tmp) {
-		*lst = func;
-	} else {
-		find_best_place(lst, func);
-	}
-}
 
 void addToSections(t_section **lst, t_section *sec) {
 	t_section * tmp;
@@ -412,7 +391,7 @@ void print_lst(t_func *lst, t_file *f) {
 	}
 }
 
-void print_out(int nsyms, int symoff, int stroff, t_file *f) {
+void print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f) {
 	int i;
 	char *stringtable;
 	struct nlist_64 *array64;
@@ -432,9 +411,9 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 	stringtable = (void *)f->ptr + stroff;
 	while (++i < nsyms){
 		if (f->mode == 64 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size)
-			addTo64(&f->lst, stringtable, array64[i]);
+			addTo64(&f->lst, stringtable, array64[i],  strsize - (f->ptr + symoff + (i * sizeof(struct nlist_64)) - f->ptr ));
 		else if (f->mode == 32 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size)
-			addTo32(&f->lst, stringtable, array32[i]);
+			addTo32(&f->lst, stringtable, array32[i], strsize - (f->ptr - f->ptr + symoff + (i * sizeof(struct nlist))));
 	}   
 	if (!f->isFat)
 		print_lst(f->lst, f);
@@ -442,6 +421,32 @@ void print_out(int nsyms, int symoff, int stroff, t_file *f) {
 
 
 
+
+void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset) {
+	t_func *func;
+	t_func *tmp;
+
+	printf("1\n");
+	printf("size %d\n", offset);
+	if (ft_strnstr(stringtable + table.n_un.n_strx, "radr://", offset))
+	 		return ;
+	 printf("2\n")	;
+	func = malloc(sizeof(t_func));
+	func->name = stringtable + table.n_un.n_strx;
+	printf("%s\n", func->name);
+	func->type = table.n_type;
+	func->value = table.n_value;
+	if(!ft_strcmp(func->name, ""))
+		func->type = N_UNDF;
+	func->sect = table.n_sect;
+	func->next = NULL;
+	tmp = *lst;
+	if (!tmp) {
+		*lst = func;
+	} else {
+		find_best_place(lst, func);
+	}
+}
 
 static void dump_segment_commands(t_file *f) {
 	int i;
@@ -453,10 +458,7 @@ static void dump_segment_commands(t_file *f) {
 	lc_size = 0;
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset + lc_size;
-		// if (cmd->cmdsize % 8 != 0) {
-		// 	ft_printf("Corrupted, load command %d not a multiple of 8.\n", i);
-		// 	return ;
-		// }
+
 		if (f->isSwap)  
 		  	swap_load_command(cmd, 0);
 		if (cmd && cmd->cmd && cmd->cmd == LC_SEGMENT_64) {
@@ -469,7 +471,7 @@ static void dump_segment_commands(t_file *f) {
 			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset + lc_size), f);
 		} else if (cmd->cmd && cmd->cmd == LC_SYMTAB && f->nm) {
 			sym = (struct symtab_command *) cmd;
-			print_out(sym->nsyms, sym->symoff, sym->stroff, f);
+			print_out(sym->nsyms, sym->symoff, sym->stroff, sym->strsize, f);
 		}
 		lc_size += cmd->cmdsize;
 			

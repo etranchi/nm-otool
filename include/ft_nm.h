@@ -66,5 +66,6 @@ void get_magic(t_file *file);
 void handle_archive(t_file *file);
 void handle_fat_header(t_file *file);
 void get_magic(t_file *file);
+void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset);
 
 #endif
