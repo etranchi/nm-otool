@@ -9,6 +9,7 @@
 # include <stdlib.h>
 # include <ar.h>
 
+#define SWAP32(x) ((((x) & 0xff000000) >> 24) | (((x) & 0xff0000) >> 8) | (((x) & 0xff00) << 8) | (((x) & 0xff) << 24))
 int		ft_printf(const char *format, ...);
 
 typedef struct s_func {
@@ -41,7 +42,7 @@ typedef struct s_file
 	int		did64;
 	int		did32;
 	int		ncmds;
-	void 	*ppc;
+	int		ppc;
 	uint32_t 	sizeofcmds;
 	int 	nm;
 	char 	*archive_name;

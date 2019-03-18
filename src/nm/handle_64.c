@@ -135,6 +135,7 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	struct section *section;
 	static int index = 1;
 	int i;
+
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
@@ -144,7 +145,7 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	section = (struct section*)(seg + 1);
 	sec->next = NULL;
 	i = -1;
-	while (++i < (int)seg->nsects) {
+	while (++i < (file->isSwap ? SWAP32(seg->nsects) : seg->nsects)) {
 		if (!file->nm && !ft_strcmp(section->sectname, "__text")) {
 			print_otool_32(section, file);
 		}
@@ -262,8 +263,6 @@ void get_right_section(t_func *lst, t_file *file) {
 			}
 			index++;
 		}
-		
-
 		section = section->next;
 	}
 }
@@ -281,14 +280,10 @@ void getType(t_func *lst, t_file *file) {
 	}
 	else if ((lst->type & N_TYPE) == N_PBUD)
 		c = 'P';
-	else if ((lst->type & N_TYPE) == N_INDR)
-		c = 'I';
 	else
 		c = 'U';
-	if ((lst->type & N_TYPE) == N_INDR) {
+	if ((lst->type & N_TYPE) == N_INDR)
 		c = 'I';
-		lst->name = ft_strjoin(lst->name, ft_strjoin(ft_strjoin(" (indirect for ", lst->name), ")"));
-	}
 	if (((lst->type & N_TYPE) == N_ABS) && lst->type & N_EXT) {
 		c = 'A';
 	}
@@ -322,20 +317,20 @@ void find_best_place(t_func **lst, t_func *to_put) {
 	prev->next = to_put;
 }
 
-void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset) {
+void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset, t_file *f) {
 	t_func *func;
 	t_func *tmp;
 
-	if (ft_strnstr(stringtable + table.n_un.n_strx, "radr://", offset))
+	if (ft_strnstr(stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx), "radr://", offset))
 	 		return ;
 	func = malloc(sizeof(t_func));
-	func->type = table.n_type;
-	func->name = ft_strdup(stringtable + table.n_un.n_strx);
+	func->type = f->isSwap ? SWAP32(table.n_type) : table.n_type;
+	func->name = ft_strdup(stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx));
 	
-	func->value = table.n_value;
+	func->value = f->isSwap ? SWAP32(table.n_value) : table.n_value;
 	if(!ft_strcmp(func->name, ""))
 		func->type = N_UNDF;
-	func->sect = table.n_sect;
+	func->sect = f->isSwap ? SWAP32(table.n_sect) : table.n_sect;
 	func->next = NULL;
 
 	tmp = *lst;
@@ -375,9 +370,9 @@ void print_lst(t_func *lst, t_file *f) {
 	while (lst) {
 		getType(lst, f);
 		if (ft_strlen(lst->name) > 0) {
-			if ((lst->type == 'I' || lst->type == 'U') && f->mode == 64)
+			if ((lst->type == 'U') && f->mode == 64)
 				ft_printf("                 ");
-			else if ((lst->type == 'I' || lst->type == 'U') && f->mode == 32)
+			else if ((lst->type == 'U') && f->mode == 32)
 				ft_printf("         ");
 			else if (f->mode == 32)
 				ft_printf("%08lx ", lst->value);
@@ -402,6 +397,7 @@ void print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f) {
 		printf("Corrupted\n");
 		return ;
 	}
+
 	if (f->mode == 64) 
 		array64 = (void *)f->ptr + symoff;
 	else  {
@@ -410,10 +406,12 @@ void print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f) {
 	}
 	stringtable = (void *)f->ptr + stroff;
 	while (++i < nsyms){
-		if (f->mode == 64 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size)
-			addTo64(&f->lst, stringtable, array64[i],  strsize - (f->ptr + symoff + (i * sizeof(struct nlist_64)) - f->ptr ));
-		else if (f->mode == 32 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size)
-			addTo32(&f->lst, stringtable, array32[i], strsize - (f->ptr - f->ptr + symoff + (i * sizeof(struct nlist))));
+		if (f->mode == 64 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size){
+			addTo64(&f->lst, stringtable, array64[i],  strsize - (f->ptr + symoff + (i * sizeof(struct nlist_64)) - f->ptr));
+		}
+		else if (f->mode == 32 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size) {
+			addTo32(&f->lst, stringtable, array32[i], strsize - (f->ptr - f->ptr + symoff + (i * sizeof(struct nlist))), f);
+		}
 	}   
 	if (!f->isFat)
 		print_lst(f->lst, f);
@@ -426,14 +424,10 @@ void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset)
 	t_func *func;
 	t_func *tmp;
 
-	printf("1\n");
-	printf("size %d\n", offset);
 	if (ft_strnstr(stringtable + table.n_un.n_strx, "radr://", offset))
 	 		return ;
-	 printf("2\n")	;
 	func = malloc(sizeof(t_func));
 	func->name = stringtable + table.n_un.n_strx;
-	printf("%s\n", func->name);
 	func->type = table.n_type;
 	func->value = table.n_value;
 	if(!ft_strcmp(func->name, ""))
@@ -458,22 +452,16 @@ static void dump_segment_commands(t_file *f) {
 	lc_size = 0;
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset + lc_size;
-
-		if (f->isSwap)  
-		  	swap_load_command(cmd, 0);
-		if (cmd && cmd->cmd && cmd->cmd == LC_SEGMENT_64) {
-			if (f->isSwap)
-				swap_segment_command_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset + lc_size), 0);
+		if (cmd && cmd->cmd && (cmd->cmd == LC_SEGMENT_64 || (f->isSwap && cmd->cmd == SWAP32(LC_SEGMENT_64)))) {
 			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset + lc_size), f);
-		} else if (cmd->cmd && cmd->cmd == LC_SEGMENT) {
-			if (f->isSwap)
-				swap_segment_command((struct segment_command *)((void *)f->ptr + f->lc_offset + lc_size), 0);
+		} else if (cmd->cmd && (cmd->cmd == LC_SEGMENT || (f->isSwap && cmd->cmd == SWAP32(LC_SEGMENT)))) {
 			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset + lc_size), f);
-		} else if (cmd->cmd && cmd->cmd == LC_SYMTAB && f->nm) {
+		} else if (cmd->cmd && (cmd->cmd == LC_SYMTAB || (f->isSwap && cmd->cmd == SWAP32(LC_SYMTAB)))) {
 			sym = (struct symtab_command *) cmd;
-			print_out(sym->nsyms, sym->symoff, sym->stroff, sym->strsize, f);
+			print_out(f->isSwap ? SWAP32(sym->nsyms) : sym->nsyms, f->isSwap ? SWAP32(sym->symoff) : sym->symoff, f->isSwap ? SWAP32(sym->stroff) : sym->stroff, f->isSwap ? SWAP32(sym->strsize) : sym->strsize, f);
 		}
-		lc_size += cmd->cmdsize;
+		// printf("cmdsize %d\n", f->isSwap ? SWAP32(cmd->cmdsize) : cmd->cmdsize);
+		lc_size += f->isSwap ? SWAP32(cmd->cmdsize) : cmd->cmdsize;
 			
 	}
 }
@@ -485,6 +473,7 @@ void handle_header(t_file *f) {
 	if (f->is64) {
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
+
 		if (f->isSwap) {
 		  swap_mach_header_64(header, 0);
 		}
@@ -493,16 +482,17 @@ void handle_header(t_file *f) {
 		f->lc_offset = header_size;
 		f->sizeofcmds = header->sizeofcmds;
 	} else {
+
 		size_t header_size = sizeof(struct mach_header);
 		struct mach_header *header = (void *)f->ptr;
-		if (f->isSwap) {
-		  swap_mach_header(header, 0);
-		}
 		f->mode = 32;
-		f->ncmds = header->ncmds;
+		f->ncmds = f->isSwap ? SWAP32(header->ncmds) : header->ncmds;
+		f->sizeofcmds = f->isSwap ? SWAP32(header->sizeofcmds) : header->sizeofcmds;
+
 		f->lc_offset = header_size;
 
 	}
+
 	dump_segment_commands(f);
 }
 
