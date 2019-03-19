@@ -109,6 +109,10 @@ void get_sc_64(struct segment_command_64 *seg, t_file *file) {
 	static int index = 1;
 	int i;
 
+	if ((seg->vmsize < seg->filesize || seg->filesize > file->buff_size) && file->nm ) {
+		ft_printf("Corrupted\n");
+		exit(1);
+	}
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int)(seg->nsects + 1))))
@@ -138,6 +142,10 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	static int index = 1;
 	int i;
 
+	if (seg->vmsize < seg->filesize && file->nm) {
+		ft_printf("Corrupted\n");
+		exit(1);
+	}
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
@@ -201,7 +209,12 @@ void get_right_section(t_func *lst, t_file *file) {
 
 void getType(t_func *lst, t_file *file) {
 	lst->tmp_type = lst->type;
-	if ((lst->tmp_type & N_TYPE) == N_UNDF)
+	if (ft_strcmp(lst->name, "bad string index") == 0) {
+		lst->type = 'C';
+		if ((lst->tmp_type & N_TYPE ) == N_ABS)
+			lst->type = 'A';
+	}
+	else if ((lst->tmp_type & N_TYPE) == N_UNDF)
 		lst->type = 'U';
 	else if ((lst->tmp_type & N_TYPE) == N_ABS)
 		lst->type = 'A';
@@ -355,20 +368,27 @@ void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset,
 	char *tmp_name;
 	int i = -1;
 	
-	array_string = stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
-	tmp_name = malloc(sizeof(char) * (offset + 1));
-	tmp_name[offset] = '\0';
-	while (++i < offset && array_string[i])
-		tmp_name[i] = array_string[i];
-	tmp_name[i] = '\0';
-	// printf("%s a %s %s \n", tmp_name, 	array_string, ft_strstr(tmp_name, "radr://"));
-	if (ft_strstr(tmp_name, "radr://")) {
-	    return ;
-	}
+
 	func = malloc(sizeof(t_func));
-	func->name = malloc(sizeof(char) * (i + 1));
-	func->name[i] = '\0';
-	ft_strncpy(func->name, tmp_name, ft_strlen(tmp_name));
+	if ((f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx) > offset) {
+		func->name = ft_strdup("bad string index");
+	} else {
+		array_string = stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
+		tmp_name = malloc(sizeof(char) * (offset + 1));
+		tmp_name[offset] = '\0';
+		while (++i < offset && array_string[i]) {
+			tmp_name[i] = array_string[i];
+		}
+		tmp_name[i] = '\0';
+		// printf("%s a %s %s \n", tmp_name, 	array_string, ft_strstr(tmp_name, "radr://"));
+		if (ft_strstr(tmp_name, "radr://")) {
+		    return ;
+		}
+		func->name = malloc(sizeof(char) * (i + 1));
+		func->name[i] = '\0';
+		ft_strncpy(func->name, tmp_name, ft_strlen(tmp_name));
+	}
+		
 	func->type = table.n_type;
 	func->value = table.n_value;
 	if(!ft_strcmp(func->name, ""))
@@ -393,6 +413,10 @@ static void dump_segment_commands(t_file *f) {
 	lc_size = 0;
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset + lc_size;
+		if (cmd && cmd->cmdsize > f->buff_size && f->nm) {
+			ft_printf("Corrupted\n");
+			return;
+		}
 		if (cmd && cmd->cmd && (cmd->cmd == LC_SEGMENT_64 || (f->isSwap && cmd->cmd == SWAP32(LC_SEGMENT_64)))) {
 			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset + lc_size), f);
 		} else if (cmd->cmd && (cmd->cmd == LC_SEGMENT || (f->isSwap && cmd->cmd == SWAP32(LC_SEGMENT)))) {
@@ -404,6 +428,7 @@ static void dump_segment_commands(t_file *f) {
 		lc_size += f->isSwap ? SWAP32(cmd->cmdsize) : cmd->cmdsize;
 			
 	}
+
 }
 
 
