@@ -30,6 +30,28 @@ int is_fat(uint32_t magic) {
 }
 
 
+void				print_byte_to_hex(char byte)
+{
+	char			str[2];
+	short			count;
+	short			char_hex;
+	unsigned char	cast;
+
+	cast = (unsigned char)byte;
+	count = -1;
+	while (++count != 2)
+	{
+		char_hex = cast % 16;
+		cast /= 16;
+		if (char_hex < 10)
+			str[count] = char_hex + '0';
+		else
+			str[count] = (char_hex % 10) + 'a';
+	}
+	
+	ft_printf("%c%c ", str[1], str[0]);
+}
+
 void print_otool_32(struct section *section, t_file *file) {
 	int i;
 	int offset;
@@ -375,7 +397,7 @@ static void dump_segment_commands(t_file *f) {
 			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset + lc_size), f);
 		} else if (cmd->cmd && (cmd->cmd == LC_SEGMENT || (f->isSwap && cmd->cmd == SWAP32(LC_SEGMENT)))) {
 			get_sc_32((struct segment_command *)((void *)f->ptr + f->lc_offset + lc_size), f);
-		} else if (cmd->cmd && (cmd->cmd == LC_SYMTAB || (f->isSwap && cmd->cmd == SWAP32(LC_SYMTAB)))) {
+		} else if (cmd->cmd && (cmd->cmd == LC_SYMTAB || (f->isSwap && cmd->cmd == SWAP32(LC_SYMTAB))) && f->nm) {
 			sym = (struct symtab_command *) cmd;
 			print_out(f->isSwap ? SWAP32(sym->nsyms) : sym->nsyms, f->isSwap ? SWAP32(sym->symoff) : sym->symoff, f->isSwap ? SWAP32(sym->stroff) : sym->stroff, f->isSwap ? SWAP32(sym->strsize) : sym->strsize, f);
 		}
@@ -406,7 +428,6 @@ void handle_header(t_file *f) {
 		f->lc_offset = header_size;
 
 	}
-
 	dump_segment_commands(f);
 }
 

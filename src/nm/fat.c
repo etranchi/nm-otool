@@ -23,7 +23,7 @@ void handle_fat_header(t_file *file) {
 	while (++i < (n_arch) && !file->corrupted) {
 		if (n_arch > 1 && file->ppc)
 			ft_printf("\n");
-		if ((file->isSwap ? SWAP32(arch->offset) : arch->offset) + (file->isSwap ? SWAP32(arch->size) : arch->size) > file->buff_size || arch->offset == 0) {
+		if (((file->isSwap ? SWAP32(arch->offset) : arch->offset) + (file->isSwap ? SWAP32(arch->size) : arch->size) > file->buff_size && file->nm)|| (arch->offset == 0)) {
 			ft_printf("Corrupted\n");
 			return ;
 		}
