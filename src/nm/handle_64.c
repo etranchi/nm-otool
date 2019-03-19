@@ -29,28 +29,6 @@ int is_fat(uint32_t magic) {
   return magic == FAT_MAGIC || magic == FAT_CIGAM;
 }
 
-void				print_byte_to_hex(char byte)
-{
-	char			str[2];
-	short			count;
-	short			char_hex;
-	unsigned char	cast;
-
-	cast = (unsigned char)byte;
-	count = -1;
-	while (++count != 2)
-	{
-		char_hex = cast % 16;
-		cast /= 16;
-		if (char_hex < 10)
-			str[count] = char_hex + '0';
-		else
-			str[count] = (char_hex % 10) + 'a';
-	}
-	
-	ft_printf("%c%c ", str[1], str[0]);
-}
-
 
 void print_otool_32(struct section *section, t_file *file) {
 	int i;
@@ -108,20 +86,21 @@ void get_sc_64(struct segment_command_64 *seg, t_file *file) {
 	struct section_64 *section;
 	static int index = 1;
 	int i;
+
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
-	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
+	if (!(sec->name = (char **)malloc(sizeof(char*) * (int)(seg->nsects + 1))))
 		return ;
 	sec->name[seg->nsects] = 0;
 	sec->index = index++;
 	section = (struct section_64*)(seg + 1);
+	sec->segname = ft_strdup(section->segname);
 	sec->next = NULL;
 	i = -1;
 	while (++i < (file->isSwap ? SWAP32(seg->nsects) : seg->nsects)) {
 		if (!file->nm && !ft_strcmp(section->sectname, "__text")) {
 			print_otool_64(section, file);
 		}
-		ft_printf("%s\n", section->sectname);
 		if (!(sec->name[i] = ft_strdup(section->sectname))) {
 			return;
 		}
@@ -144,6 +123,7 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	sec->name[seg->nsects] = 0;
 	sec->index = index++;
 	section = (struct section*)(seg + 1);
+	sec->segname = ft_strdup(section->segname);
 	sec->next = NULL;
 	i = -1;
 	while (++i < (file->isSwap ? SWAP32(seg->nsects) : seg->nsects)) {
@@ -166,64 +146,6 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 void get_magic(t_file *file);
 
 
-int	swap_uint16(int n)
-{
-	n = ((n << 8) & 0xFF00FF00) | ((n >> 8) & 0xFF00FF);
-	return ((n << 16) | (n >> 16));
-}
-
-
-
-void swap_value(t_func *first, t_func *second) {
-	char 	*tmp_name;
-	int 	tmp_type;
-	int 	tmp_sect;
-	unsigned long tmp_value;
-
-	tmp_name = first->name;
-	tmp_type = first->type;
-	tmp_sect = first->sect;
-	tmp_value = first->value;
-	first->name = second->name;
-	first->type = second->type;
-	first->sect = second->sect;
-	first->value = second->value;
-	second->name = tmp_name;
-	second->type = tmp_type;
-	second->sect = tmp_sect;
-	second->value = tmp_value;
-
-}
-
-void			sort_name(t_func **begin)
-{
-	t_func	*curr;
-	t_func	*next;
-	char	*tmp;
-	t_func *prev;
-	t_func *prev_bis;
-
-
-	curr = (*begin);
-	prev = NULL;
-	prev_bis = NULL;
-	while (curr && curr->next != NULL)
-	{
-		next = curr->next;
-		if (next && (ft_strcmp(curr->name, next->name) > 0))
-		{
-			swap_value(next, curr);
-			curr = (*begin);
-		}
-		else {
-			prev_bis = prev;
-			prev = curr;
-			curr = curr->next;
-		}
-	}
-}
-
-
 void get_right_section(t_func *lst, t_file *file) {
 	t_section *section;
 	int i;
@@ -236,30 +158,17 @@ void get_right_section(t_func *lst, t_file *file) {
 		while (section->name[++i]){
 			if(lst->sect == index)
 			{
-				lst->tmp_type = lst->type;
-				lst->type = section->name[i][2];
-				if (!ft_strcmp(section->name[i], "__text") && (lst->tmp_type & N_EXT))
-					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__stubs") || !ft_strcmp(section->name[i], "__all_image_info__DATA"))
+				// ft_printf("%s %s\n", section->segname, section->name[i]);
+				if (!section->segname)
+					lst->type = 'X';
+				if (ft_strcmp(section->name[i], "__bss") == 0)
+					lst->type = 'B';
+				else if (ft_strcmp(section->name[i], "__data") == 0)
+					lst->type = 'D';
+				else if (ft_strcmp(section->name[i], "__text") == 0)
+					lst->type = 'T';
+				else
 					lst->type = 'S';
-				if (!ft_strcmp(section->name[i], "__data") && (lst->tmp_type & N_EXT))
-					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__interpose") ||!ft_strcmp(section->name[i], "__objc_const") || !ft_strcmp(section->name[i], "__objc_classname") || !ft_strcmp(section->name[i], "__objc_methname") || !ft_strcmp(section->name[i], "__objc_methtype") || !ft_strcmp(section->name[i], "__objc_nlclslist") || !ft_strcmp(section->name[i], "__objc_opt_rw") || !ft_strcmp(section->name[i], "__objc_opt_ro") || !ft_strcmp(section->name[i], "__thread_bss") || !ft_strcmp(section->name[i], "__thread_vars") || !ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__objc_ivar") || !ft_strcmp(section->name[i], "__program_vars") || !ft_strcmp(section->name[i], "__eh_frame") || !ft_strcmp(section->name[i], "__objc_data") || !ft_strcmp(section->name[i], "__gcc_except_tab__TEXT") || !ft_strcmp(section->name[i], "__cstring") || !ft_strcmp(section->name[i], "__crash_info") || !ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__ustring") || !ft_strcmp(section->name[i], "__info_plist") )
-					lst->type = 's';
-				if (!ft_strcmp(section->name[i], "__thread_vars") && lst->tmp_type & N_PEXT)
-					lst->type = 't';
-				if ((!ft_strcmp(section->name[i], "__const") || !ft_strcmp(section->name[i], "__objc_ivar")) && lst->tmp_type & N_EXT) 
-					lst->type -= 32;
-				if (!ft_strcmp(section->name[i], "__common") && (lst->tmp_type & N_PEXT || lst->tmp_type & N_EXT)) 
-					lst->type = 's';
-				if ((!ft_strcmp(section->name[i], "__common") || !ft_strcmp(section->name[i], "__class")  || !ft_strcmp(section->name[i], "__xcrun_shim")) && lst->tmp_type & N_EXT) 
-					lst->type = 'S';
-				if (!ft_strcmp(section->name[i], "__const") && lst->tmp_type & N_PEXT)
-					lst->type = 's';
-				if (!ft_strcmp(section->name[i], "__objc_data") && lst->tmp_type & N_EXT)
-					lst->type = 'S';
-				if (!ft_strcmp(lst->name, "_objc_classes") || !ft_strcmp(lst->name, "__ZL11_class_name") || !ft_strcmp(lst->name, "__non_lazy_classes"))
-					lst->type = 's';
 				return ;
 			}
 			index++;
@@ -269,28 +178,21 @@ void get_right_section(t_func *lst, t_file *file) {
 }
 
 void getType(t_func *lst, t_file *file) {
-	char c;
-
-	if (lst->type == N_UNDF) {
-		c = 'U';
-		lst->sect = NO_SECT;
-	}
-	else if ((lst->type & N_TYPE) == N_SECT) {
-			get_right_section(lst, file);
-			return ;
-	}
-	else if ((lst->type & N_TYPE) == N_PBUD)
-		c = 'P';
+	lst->tmp_type = lst->type;
+	if ((lst->tmp_type & N_TYPE) == N_UNDF)
+		lst->type = 'U';
+	else if ((lst->tmp_type & N_TYPE) == N_ABS)
+		lst->type = 'A';
+	else if ((lst->tmp_type & N_TYPE) == N_SECT)
+		get_right_section(lst, file);
+	else if ((lst->tmp_type & N_TYPE) == N_PBUD)
+		lst->type = 'S';
+	else if ((lst->tmp_type & N_TYPE) == N_INDR)
+		lst->type = 'I';
 	else
-		c = 'U';
-	if ((lst->type & N_TYPE) == N_INDR)
-		c = 'I';
-	if (((lst->type & N_TYPE) == N_ABS) && lst->type & N_EXT) {
-		c = 'A';
-	}
-	if (lst->type & N_STAB)
-		lst->name = "";
-	lst->type = (char)c;
+		lst->type = 'X';
+	if (!(lst->tmp_type & N_EXT) && (lst->type != 'X')) 
+		lst->type += 32;
 }	
 
 
@@ -370,18 +272,21 @@ void print_lst(t_func *lst, t_file *f) {
 	tmp = lst;
 	while (lst) {
 		getType(lst, f);
-		if (ft_strlen(lst->name) > 0) {
-			if ((lst->type == 'U') && f->mode == 64)
-				ft_printf("                 ");
-			else if ((lst->type == 'U') && f->mode == 32)
-				ft_printf("         ");
-			else if (f->mode == 32)
-				ft_printf("%08lx ", lst->value);
-			else {
-				ft_printf("%016lx ", lst->value);
+		if (!(lst->type == 'X' || lst->type == 'x' || (lst->type == 'u' && lst->value == 0)) ) {
+			if (ft_strlen(lst->name) > 0) {
+				if ((lst->type == 'U' || lst->type == 'u') && f->mode == 64) {
+					ft_printf("                 ");
+				}
+				else if ((lst->type == 'U' || lst->type == 'u') && f->mode == 32)
+					ft_printf("         ");
+				else if (f->mode == 32)
+					ft_printf("%08lx ", lst->value);
+				else {
+					ft_printf("%016lx ", lst->value);
+				}
+				ft_printf("%c ", lst->type);	
+				ft_printf("%s\n", lst->name);
 			}
-			ft_printf("%c ", lst->type);	
-			ft_printf("%s\n", lst->name);
 		}
 		lst = lst->next;
 	}
@@ -410,8 +315,8 @@ void print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f) {
 		if (f->mode == 64 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size){
 			addTo64(&f->lst, stringtable, array64[i], strsize, f);
 		}
-		else if (f->mode == 32 && f->ptr + symoff + (i * sizeof(struct nlist_64)) < f->ptr + f->ptr_size) {
-			addTo32(&f->lst, stringtable, array32[i], strsize, f);
+		else if (f->mode == 32 && f->ptr + symoff + (i * sizeof(struct nlist)) < f->ptr + f->ptr_size) {
+			addTo32(&f->lst, stringtable, array32[i], f->ptr_size - symoff - (i * sizeof(struct nlist)), f);
 		}
 	}
 	if (!f->isFat)
@@ -426,17 +331,18 @@ void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset,
 	t_func *tmp;
 	char *array_string;
 	char *tmp_name;
-	printf("%u\n", table.n_un.n_strx);
-	printf("%d\n", offset);
 	int i = -1;
+	
 	array_string = stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
 	tmp_name = malloc(sizeof(char) * (offset + 1));
 	tmp_name[offset] = '\0';
-	while (++i < (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx) && array_string[i])
+	while (++i < offset && array_string[i])
 		tmp_name[i] = array_string[i];
 	tmp_name[i] = '\0';
-	if (ft_strnstr( "radr://", tmp_name ,i - 1))
+	// printf("%s a %s %s \n", tmp_name, 	array_string, ft_strstr(tmp_name, "radr://"));
+	if (ft_strstr(tmp_name, "radr://")) {
 	    return ;
+	}
 	func = malloc(sizeof(t_func));
 	func->name = malloc(sizeof(char) * (i + 1));
 	func->name[i] = '\0';
@@ -485,10 +391,6 @@ void handle_header(t_file *f) {
 	if (f->is64) {
 		size_t header_size = sizeof(struct mach_header_64);
 		struct mach_header_64 *header = (void *)f->ptr;
-
-		if (f->isSwap) {
-		  swap_mach_header_64(header, 0);
-		}
 		f->mode = 64;
 		f->ncmds = header->ncmds;
 		f->lc_offset = header_size;

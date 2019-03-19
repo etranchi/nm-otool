@@ -5,6 +5,7 @@
 # include "../lib/ft_printf/ft_printf.h"
 # include <mach-o/swap.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <sys/stat.h>
 # include <stdlib.h>
 # include <ar.h>
@@ -26,6 +27,7 @@ typedef struct s_func {
 typedef struct s_section {
 	char **name;
 	int index;
+	char *segname;
 	struct s_section *next;
 }				t_section;
 
