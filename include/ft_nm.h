@@ -58,6 +58,10 @@ typedef struct s_file
 }				t_file;
 
 int		ft_printf(const char *format, ...);
+void handle_archive(t_file *file);
+void handle_fat_header(t_file *file);
+
+
 void handle_64(t_file *file);
 int is_magic_64(uint32_t magic);
 int should_swap_bytes(uint32_t magic);
@@ -65,11 +69,31 @@ int is_fat(uint32_t magic);
 
 void get_sc_64(struct segment_command_64 *seg, t_file *file);
 void get_sc_32(struct segment_command *seg, t_file *file);
+
+
 void addToSections(t_section **lst, t_section *sec);
+void get_right_section(t_func *lst, t_file *file);
+void getType(t_func *lst, t_file *file);
+
 void get_magic(t_file *file);
-void handle_archive(t_file *file);
-void handle_fat_header(t_file *file);
-void get_magic(t_file *file);
+
 void addTo64(t_func **lst, char *stringtable, struct nlist_64 table, int offset, t_file *f);
+void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset, t_file *f);
+
+void print_otool_32(struct section *section, t_file *file);
+void print_otool_64(struct section_64 *section, t_file *file);
+void print_lst(t_func *lst, t_file *f);
+void				print_byte_to_hex(char byte);
+void find_best_place(t_func **lst, t_func *to_put);
+
+int is_magic_32(uint32_t magic);
+int is_magic_64(uint32_t magic);
+int should_swap_bytes(uint32_t magic);
+int is_fat(uint32_t magic);
+
+uint32_t	endian_32(uint32_t nb);
+uint64_t	endian_64(uint64_t nb);
+
+
 
 #endif

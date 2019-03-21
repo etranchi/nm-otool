@@ -31,6 +31,7 @@ int initFile(t_file *file, char *name, int nm) {
 	file->did32 = 0;
 	file->did64 = 0;
 	file->nm = nm;
+	file->ppc = 0;
 	return (1);
 }
 

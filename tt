@@ -1,0 +1,954 @@
+
+/usr/bin/audiodevice (for architecture ppc):
+sec->name[i] __text
+sec->name[i] __symbol_stub1
+sec->name[i] __cstring
+sec->name[i] __const
+sec->name[i] __literal4
+sec->name[i] __literal8
+sec->name[i] __data
+sec->name[i] __nl_symbol_ptr
+sec->name[i] __dyld
+sec->name[i] __la_symbol_ptr
+sec->name[i] __cfstring
+sec->name[i] __common
+sec->name[i] __bss
+sec->name[i] __message_refs
+sec->name[i] __cls_refs
+sec->name[i] __module_info
+sec->name[i] __class
+sec->name[i] __meta_class
+sec->name[i] __cls_meth
+sec->name[i] __inst_meth
+sec->name[i] __instance_vars
+sec->name[i] __symbols
+sec->name[i] __image_info
+ __TEXT __text
+ 1 -
+00002fc0 t +[SSAudioDeviceCenter initialize]
+ __TEXT __text
+ 1 -
+00002d84 t -[SSAudioDevice canBeDefaultDevice]
+ __TEXT __text
+ 1 -
+00002e10 t -[SSAudioDevice canBeDefaultSystemDevice]
+ __TEXT __text
+ 1 -
+00002bf4 t -[SSAudioDevice compare:]
+ __TEXT __text
+ 1 -
+00002e9c t -[SSAudioDevice coreAudioDeviceID]
+ __TEXT __text
+ 1 -
+00002f30 t -[SSAudioDevice coreAudioIsInput]
+ __TEXT __text
+ 1 -
+00002ea4 t -[SSAudioDevice coreAudioSourceType]
+ __TEXT __text
+ 1 -
+00002f3c t -[SSAudioDevice coreAudioTransportType]
+ __TEXT __text
+ 1 -
+00002a60 t -[SSAudioDevice dealloc]
+ __TEXT __text
+ 1 -
+00002aa4 t -[SSAudioDevice description]
+ __TEXT __text
+ 1 -
+00002eac t -[SSAudioDevice fetchCoreAudioSourceType]
+ __TEXT __text
+ 1 -
+000029e0 t -[SSAudioDevice initWithAudioDeviceID:source:isInput:]
+ __TEXT __text
+ 1 -
+00002b34 t -[SSAudioDevice isEqual:]
+ __TEXT __text
+ 1 -
+00002c58 t -[SSAudioDevice name]
+ __TEXT __text
+ 1 -
+00003104 t -[SSAudioDeviceCenter _allDevicesWithDeviceID:isInput:]
+ __TEXT __text
+ 1 -
+0000363c t -[SSAudioDeviceCenter _defaultDeviceOfClass:]
+ __TEXT __text
+ 1 -
+00003c8c t -[SSAudioDeviceCenter _devicePropertyChanged:]
+ __TEXT __text
+ 1 -
+00003780 t -[SSAudioDeviceCenter _getAndSetVolume:forInput:]
+ __TEXT __text
+ 1 -
+00003c84 t -[SSAudioDeviceCenter _headphoneDevice]
+ __TEXT __text
+ 1 -
+000032bc t -[SSAudioDeviceCenter _loadDeviceList:]
+ __TEXT __text
+ 1 -
+000035ac t -[SSAudioDeviceCenter _setDefaultDeviceOfClass:to:]
+ __TEXT __text
+ 1 -
+0000374c t -[SSAudioDeviceCenter _stringForCAError:]
+ __TEXT __text
+ 1 -
+00004140 t -[SSAudioDeviceCenter audioFollowsJack]
+ __TEXT __text
+ 1 -
+0000309c t -[SSAudioDeviceCenter dealloc]
+ __TEXT __text
+ 1 -
+0000345c t -[SSAudioDeviceCenter deviceWithID:isInput:]
+ __TEXT __text
+ 1 -
+000034ec t -[SSAudioDeviceCenter devicesWithTransportType:isInput:]
+ __TEXT __text
+ 1 -
+00003058 t -[SSAudioDeviceCenter init]
+ __TEXT __text
+ 1 -
+0000343c t -[SSAudioDeviceCenter inputDevices]
+ __TEXT __text
+ 1 -
+00003b20 t -[SSAudioDeviceCenter inputVolume]
+ __TEXT __text
+ 1 -
+0000344c t -[SSAudioDeviceCenter outputDevices]
+ __TEXT __text
+ 1 -
+00003b48 t -[SSAudioDeviceCenter outputVolume]
+ __TEXT __text
+ 1 -
+000036e0 t -[SSAudioDeviceCenter selectedInputDevice]
+ __TEXT __text
+ 1 -
+0000370c t -[SSAudioDeviceCenter selectedOutputDevice]
+ __TEXT __text
+ 1 -
+00003738 t -[SSAudioDeviceCenter selectedSystemDevice]
+ __TEXT __text
+ 1 -
+00003f94 t -[SSAudioDeviceCenter setAudioFollowsJack:]
+ __TEXT __text
+ 1 -
+00003b38 t -[SSAudioDeviceCenter setInputVolume:]
+ __TEXT __text
+ 1 -
+00003b60 t -[SSAudioDeviceCenter setOutputVolume:]
+ __TEXT __text
+ 1 -
+000036c8 t -[SSAudioDeviceCenter setSelectedInputDevice:]
+ __TEXT __text
+ 1 -
+000036f4 t -[SSAudioDeviceCenter setSelectedOutputDevice:]
+ __TEXT __text
+ 1 -
+00003720 t -[SSAudioDeviceCenter setSelectedSystemDevice:]
+ __TEXT __text
+ 1 -
+00003c04 t -[SSAudioDeviceCenter setSystemVolume:]
+ __TEXT __text
+ 1 -
+00003efc t -[SSAudioDeviceCenter supportsAudioFollowsJack]
+ __TEXT __text
+ 1 -
+00003b70 t -[SSAudioDeviceCenter systemVolume]
+         U .objc_class_name_NSAutoreleasePool
+         U .objc_class_name_NSDictionary
+         U .objc_class_name_NSMutableArray
+         U .objc_class_name_NSNumber
+         U .objc_class_name_NSObject
+         U .objc_class_name_NSString
+         U .objc_class_name_NSURL
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ __DATA __bss
+ __OBJC __message_refs
+ __OBJC __cls_refs
+ __OBJC __module_info
+ __OBJC __class
+ 17 -
+00006108 S .objc_class_name_SSAudioDevice
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ __DATA __bss
+ __OBJC __message_refs
+ __OBJC __cls_refs
+ __OBJC __module_info
+ __OBJC __class
+ 17 -
+00006138 S .objc_class_name_SSAudioDeviceCenter
+         U _AudioDeviceAddPropertyListener
+         U _AudioDeviceGetProperty
+         U _AudioDeviceGetPropertyInfo
+         U _AudioDeviceRemovePropertyListener
+         U _AudioHardwareGetProperty
+         U _AudioHardwareGetPropertyInfo
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ __DATA __bss
+ 13 -
+000051cc b _AudioHardwareServiceGetPropertyDataPtr
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ __DATA __bss
+ 13 -
+000051d4 b _AudioHardwareServiceHasPropertyPtr
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ __DATA __bss
+ 13 -
+000051d0 b _AudioHardwareServiceSetPropertyDataPtr
+         U _AudioHardwareSetProperty
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00004fcc s _C.198.95165
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00004fc4 s _C.199.95166
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00004fbc s _C.200.95167
+         U _CFBundleCreate
+         U _CFBundleGetFunctionPointerForName
+         U _GetSysBeepVolume
+         U _NSLog
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+0000500c D _NXArgc
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005008 D _NXArgv
+         U _SetSysBeepVolume
+         U _UTCreateStringForOSType
+         U ___CFConstantStringClassReference
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00005188 S ___darwin_gcc3_preregister_frame_info
+         U ___keymgr_dwarf2_register_sections
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005000 D ___progname
+         U __cthread_init_routine
+ __TEXT __text
+ 1 -
+00002388 t __dyld_func_lookup
+ __TEXT __text
+ 1 -
+00002024 t __start
+         U _atexit
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+0000518c S _catch_exception_raise
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00005190 S _catch_exception_raise_state
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00005194 S _catch_exception_raise_state_identity
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00005198 S _clock_alarm_reply
+ __TEXT __text
+ 1 -
+00003dd4 t _devicePropertyChanged
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+0000519c S _do_mach_notify_dead_name
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051a0 S _do_mach_notify_no_senders
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051a4 S _do_mach_notify_port_deleted
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051a8 S _do_mach_notify_send_once
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051ac S _do_seqnos_mach_notify_dead_name
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051b0 S _do_seqnos_mach_notify_no_senders
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051b4 S _do_seqnos_mach_notify_port_deleted
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051b8 S _do_seqnos_mach_notify_send_once
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005004 D _environ
+         U _errno
+         U _exit
+         U _free
+         U _mach_init_routine
+ __TEXT __text
+ 1 -
+00002398 t _main
+         U _malloc
+         U _objc_msgSendSuper
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005010 d _pointer_to__darwin_gcc3_preregister_frame_info
+         U _pow
+         U _printf$LDBL128
+         U _puts
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+000051bc S _receive_samples
+         U _strcmp
+         U _sysctlbyname
+ __TEXT __text
+ 1 -
+00002370 t dyld_stub_binding_helper
+ __TEXT __text
+ 1 -
+00001ff0 T start
+
+/usr/bin/audiodevice (for architecture i386):
+sec->name[i] __text
+sec->name[i] __cstring
+sec->name[i] __literal4
+sec->name[i] __data
+sec->name[i] __dyld
+sec->name[i] __cfstring
+sec->name[i] __common
+sec->name[i] __bss
+sec->name[i] __message_refs
+sec->name[i] __cls_refs
+sec->name[i] __module_info
+sec->name[i] __class
+sec->name[i] __meta_class
+sec->name[i] __cls_meth
+sec->name[i] __inst_meth
+sec->name[i] __instance_vars
+sec->name[i] __symbols
+sec->name[i] __image_info
+sec->name[i] __pointers
+sec->name[i] __jump_table
+ __TEXT __text
+ 1 -
+000033a6 t +[SSAudioDeviceCenter initialize]
+ __TEXT __text
+ 1 -
+000031a4 t -[SSAudioDevice canBeDefaultDevice]
+ __TEXT __text
+ 1 -
+0000321e t -[SSAudioDevice canBeDefaultSystemDevice]
+ __TEXT __text
+ 1 -
+00003029 t -[SSAudioDevice compare:]
+ __TEXT __text
+ 1 -
+00003298 t -[SSAudioDevice coreAudioDeviceID]
+ __TEXT __text
+ 1 -
+00003324 t -[SSAudioDevice coreAudioIsInput]
+ __TEXT __text
+ 1 -
+000032a3 t -[SSAudioDevice coreAudioSourceType]
+ __TEXT __text
+ 1 -
+00003330 t -[SSAudioDevice coreAudioTransportType]
+ __TEXT __text
+ 1 -
+00002eda t -[SSAudioDevice dealloc]
+ __TEXT __text
+ 1 -
+00002f04 t -[SSAudioDevice description]
+ __TEXT __text
+ 1 -
+000032ae t -[SSAudioDevice fetchCoreAudioSourceType]
+ __TEXT __text
+ 1 -
+00002e7a t -[SSAudioDevice initWithAudioDeviceID:source:isInput:]
+ __TEXT __text
+ 1 -
+00002f88 t -[SSAudioDevice isEqual:]
+ __TEXT __text
+ 1 -
+00003079 t -[SSAudioDevice name]
+ __TEXT __text
+ 1 -
+000034a6 t -[SSAudioDeviceCenter _allDevicesWithDeviceID:isInput:]
+ __TEXT __text
+ 1 -
+000039a2 t -[SSAudioDeviceCenter _defaultDeviceOfClass:]
+ __TEXT __text
+ 1 -
+00003fbd t -[SSAudioDeviceCenter _devicePropertyChanged:]
+ __TEXT __text
+ 1 -
+00003b1c t -[SSAudioDeviceCenter _getAndSetVolume:forInput:]
+ __TEXT __text
+ 1 -
+00003fb6 t -[SSAudioDeviceCenter _headphoneDevice]
+ __TEXT __text
+ 1 -
+00003652 t -[SSAudioDeviceCenter _loadDeviceList:]
+ __TEXT __text
+ 1 -
+00003932 t -[SSAudioDeviceCenter _setDefaultDeviceOfClass:to:]
+ __TEXT __text
+ 1 -
+00003af9 t -[SSAudioDeviceCenter _stringForCAError:]
+ __TEXT __text
+ 1 -
+00004444 t -[SSAudioDeviceCenter audioFollowsJack]
+ __TEXT __text
+ 1 -
+00003450 t -[SSAudioDeviceCenter dealloc]
+ __TEXT __text
+ 1 -
+00003813 t -[SSAudioDeviceCenter deviceWithID:isInput:]
+ __TEXT __text
+ 1 -
+0000388d t -[SSAudioDeviceCenter devicesWithTransportType:isInput:]
+ __TEXT __text
+ 1 -
+00003426 t -[SSAudioDeviceCenter init]
+ __TEXT __text
+ 1 -
+000037cb t -[SSAudioDeviceCenter inputDevices]
+ __TEXT __text
+ 1 -
+00003e34 t -[SSAudioDeviceCenter inputVolume]
+ __TEXT __text
+ 1 -
+000037ef t -[SSAudioDeviceCenter outputDevices]
+ __TEXT __text
+ 1 -
+00003e8d t -[SSAudioDeviceCenter outputVolume]
+ __TEXT __text
+ 1 -
+00003a37 t -[SSAudioDeviceCenter selectedInputDevice]
+ __TEXT __text
+ 1 -
+00003a86 t -[SSAudioDeviceCenter selectedOutputDevice]
+ __TEXT __text
+ 1 -
+00003ad5 t -[SSAudioDeviceCenter selectedSystemDevice]
+ __TEXT __text
+ 1 -
+00004296 t -[SSAudioDeviceCenter setAudioFollowsJack:]
+ __TEXT __text
+ 1 -
+00003e60 t -[SSAudioDeviceCenter setInputVolume:]
+ __TEXT __text
+ 1 -
+00003eb9 t -[SSAudioDeviceCenter setOutputVolume:]
+ __TEXT __text
+ 1 -
+00003a0c t -[SSAudioDeviceCenter setSelectedInputDevice:]
+ __TEXT __text
+ 1 -
+00003a5b t -[SSAudioDeviceCenter setSelectedOutputDevice:]
+ __TEXT __text
+ 1 -
+00003aaa t -[SSAudioDeviceCenter setSelectedSystemDevice:]
+ __TEXT __text
+ 1 -
+00003f59 t -[SSAudioDeviceCenter setSystemVolume:]
+ __TEXT __text
+ 1 -
+00004202 t -[SSAudioDeviceCenter supportsAudioFollowsJack]
+ __TEXT __text
+ 1 -
+00003ee6 t -[SSAudioDeviceCenter systemVolume]
+         U .objc_class_name_NSAutoreleasePool
+         U .objc_class_name_NSDictionary
+         U .objc_class_name_NSMutableArray
+         U .objc_class_name_NSNumber
+         U .objc_class_name_NSObject
+         U .objc_class_name_NSString
+         U .objc_class_name_NSURL
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00006120 S .objc_class_name_SSAudioDevice
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ __DATA __dyld
+ __DATA __la_symbol_ptr
+ __DATA __cfstring
+ __DATA __common
+ 12 -
+00006160 S .objc_class_name_SSAudioDeviceCenter
+         U _AudioDeviceAddPropertyListener
+         U _AudioDeviceGetProperty
+         U _AudioDeviceGetPropertyInfo
+         U _AudioDeviceRemovePropertyListener
+         U _AudioHardwareGetProperty
+         U _AudioHardwareGetPropertyInfo
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ 8 -
+00005158 s _AudioHardwareServiceGetPropertyDataPtr
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ 8 -
+00005160 s _AudioHardwareServiceHasPropertyPtr
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ __DATA __nl_symbol_ptr
+ 8 -
+0000515c s _AudioHardwareServiceSetPropertyDataPtr
+         U _AudioHardwareSetProperty
+         U _CFBundleCreate
+         U _CFBundleGetFunctionPointerForName
+         U _GetSysBeepVolume
+         U _NSLog
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+0000500c S _NXArgc
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00005008 S _NXArgv
+         U _SetSysBeepVolume
+         U _UTCreateStringForOSType
+         U ___CFConstantStringClassReference
+         U ___keymgr_dwarf2_register_sections
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00005000 S ___progname
+         U __cthread_init_routine
+ __TEXT __text
+ 1 -
+00002674 t __dyld_func_lookup
+ __TEXT __text
+ 1 -
+00002586 t __start
+         U _atexit
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005118 D _catch_exception_raise
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+0000511c D _catch_exception_raise_state
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005120 D _catch_exception_raise_state_identity
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005124 D _clock_alarm_reply
+ __TEXT __text
+ 1 -
+000040e8 t _devicePropertyChanged
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005128 D _do_mach_notify_dead_name
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+0000512c D _do_mach_notify_no_senders
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005130 D _do_mach_notify_port_deleted
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005134 D _do_mach_notify_send_once
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005138 D _do_seqnos_mach_notify_dead_name
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+0000513c D _do_seqnos_mach_notify_no_senders
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005140 D _do_seqnos_mach_notify_port_deleted
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005144 D _do_seqnos_mach_notify_send_once
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ 4 -
+00005004 S _environ
+         U _errno
+         U _exit
+         U _free
+         U _mach_init_routine
+ __TEXT __text
+ 1 -
+0000267a t _main
+         U _malloc
+         U _objc_msgSend
+         U _objc_msgSendSuper
+         U _objc_msgSend_fpret
+         U _pow
+         U _printf
+         U _puts
+ __TEXT __text
+ __TEXT __symbol_stub1
+ __TEXT __cstring
+ __TEXT __const
+ __TEXT __literal4
+ __TEXT __literal8
+ __DATA __data
+ 7 -
+00005148 D _receive_samples
+         U _strcmp
+         U _sysctlbyname
+ __TEXT __text
+ 1 -
+00002668 t dyld_stub_binding_helper
+ __TEXT __text
+ 1 -
+0000255c T start
