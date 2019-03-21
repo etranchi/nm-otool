@@ -1,76 +1,209 @@
-                 U _BZ2_bzRead
-                 U _BZ2_bzReadClose
-                 U _BZ2_bzdopen
                  U __DefaultRuneLocale
+                 U ___assert_rtn
+                 U ___bzero
                  U ___error
                  U ___maskrune
-                 U ___mb_cur_max
+                 U ___sincos_stret
+                 U ___sprintf_chk
                  U ___stack_chk_fail
                  U ___stack_chk_guard
                  U ___stderrp
+                 U ___stdinp
                  U ___stdoutp
-0000000100000000 T __mh_execute_header
-                 U _basename
+                 U ___strcat_chk
+                 U ___strlcat_chk
+                 U ___tolower
+                 U ___toupper
+                 U __exit
+                 U __longjmp
+0000000100000000 A __mh_execute_header
+                 U __setjmp
+                 U _abort
+                 U _accept
+                 U _access
+                 U _acos
+                 U _alarm
+                 U _asctime
+                 U _asin
+                 U _atan
+                 U _atan2
+                 U _atof
+                 U _atoi
+                 U _atol
+                 U _bcmp
+                 U _bcopy
+                 U _bind
                  U _calloc
+                 U _ceil
+                 U _cfgetospeed
+                 U _chdir
+                 U _chmod
+                 U _clearerr
                  U _close
-                 U _err
-                 U _errx
+                 U _closedir
+                 U _connect
+                 U _cos
+                 U _creat
+                 U _dup
+                 U _dup2
+                 U _environ
+                 U _execlp
+                 U _execvp
                  U _exit
+                 U _exp
+                 U _fchmod
+                 U _fchown
                  U _fclose
+                 U _fcntl
+                 U _fdopen
+                 U _feof
                  U _ferror
-                 U _fgetln
+                 U _fflush
+                 U _fgets
                  U _fileno
-                 U _fnmatch
+                 U _floor
+                 U _fmod
                  U _fopen
+                 U _fork
+                 U _fpathconf
                  U _fprintf
+                 U _fputc
                  U _fputs
+                 U _fread
                  U _free
+                 U _freeaddrinfo
                  U _fstat$INODE64
-                 U _fts_close$INODE64
-                 U _fts_open$INODE64
-                 U _fts_read$INODE64
-                 U _fts_set$INODE64
+                 U _fsync
+                 U _ftello
                  U _fwrite
+                 U _gai_strerror
+                 U _getaddrinfo
+                 U _getc
+                 U _getchar
+                 U _getcwd
                  U _getenv
-                 U _getopt_long
-                 U _getprogname
-                 U _gzdopen
-                 U _gzread
+                 U _geteuid
+                 U _getgrgid
+                 U _gethostbyname
+                 U _gethostname
+                 U _getloadavg
+                 U _getpagesize
+                 U _getpeername
+                 U _getpgrp
+                 U _getpid
+                 U _getpwnam
+                 U _getpwuid
+                 U _getrlimit
+                 U _getrusage
+                 U _getservbyname
+                 U _getsockname
+                 U _gettimeofday
+                 U _getuid
+                 U _gmtime
+                 U _h_errno
+                 U _index
+                 U _ioctl
                  U _isatty
+                 U _kill
+                 U _killpg
+                 U _link
+                 U _listen
+                 U _localtime
+                 U _log
+                 U _log10
+                 U _logb
+                 U _longjmp
                  U _lseek
-                 U _lzma_alone_decoder
-                 U _lzma_code
-                 U _lzma_stream_decoder
-                 U _madvise
+                 U _lstat$INODE64
+                 U _mach_port_deallocate
+                 U _mach_task_self_
                  U _malloc
-                 U _mbtowc
-                 U _memchr
+                 U _malloc_create_zone
+                 U _malloc_set_zone_name
+                 U _malloc_zone_free
+                 U _malloc_zone_malloc
+                 U _malloc_zone_realloc
+                 U _mbrlen
+                 U _mbsinit
+                 U _memcmp
                  U _memcpy
-                 U _mmap
-                 U _munmap
+                 U _memset
+                 U _memset_pattern16
+                 U _mkdir
+                 U _mkstemp
+                 U _mktime
+                 U _nl_langinfo
                  U _open
-                 U _optarg
-                 U _optind
+                 U _opendir$INODE64
+                 U _pipe
+                 U _pow
                  U _printf
+                 U _putc
                  U _putchar
                  U _puts
+                 U _qsort
+                 U _random
                  U _read
+                 U _readdir$INODE64
+                 U _readlink
                  U _realloc
-                 U _regcomp
-                 U _regerror
-                 U _regexec
-                 U _setlinebuf
+                 U _recvfrom
+                 U _rename
+                 U _rindex
+                 U _rint
+                 U _rmdir
+                 U _sbrk
+                 U _select$1050
+                 U _sendto
+                 U _setitimer
+                 U _setjmp
                  U _setlocale
+                 U _setpgid
+                 U _setrlimit
+                 U _setsid
+                 U _setsockopt
+                 U _setvbuf
+                 U _shutdown
+                 U _sigaction
+                 U _sigprocmask
+                 U _sigsuspend
+                 U _sin
+                 U _sleep
+                 U _socket
+                 U _srandom
                  U _stat$INODE64
-                 U _strcasecmp
                  U _strcmp
                  U _strcpy
-                 U _strdup
                  U _strerror
+                 U _strftime
                  U _strlen
-                 U _strsep
-                 U _strtoll
-                 U _strtoull
-                 U _warn
-                 U _warnx
+                 U _strncmp
+                 U _strncpy
+                 U _strsignal
+                 U _strtol
+                 U _symlink
+                 U _sync
+                 U _tcflow
+                 U _tcgetattr
+                 U _tcgetpgrp
+                 U _tcsetattr
+                 U _tcsetpgrp
+                 U _tgetent
+                 U _tgetflag
+                 U _tgetnum
+                 U _tgetstr
+                 U _tgoto
+                 U _time
+                 U _tparm
+                 U _tputs
+                 U _tzset
+                 U _umask
+                 U _uname
+                 U _ungetc
+                 U _unlink
+                 U _utimes
+                 U _vfprintf
+                 U _vm_region_64
+                 U _wait3
+                 U _write
                  U dyld_stub_binder

@@ -30,15 +30,16 @@ void handle_fat_header(t_file *file) {
 		if ((arch->cputype == CPU_TYPE_X86 || SWAP32(arch->cputype) == CPU_TYPE_X86_64) || (SWAP32(arch->cputype) == CPU_TYPE_I386 && i == n_arch - 1) || SWAP32(arch->cputype) == CPU_TYPE_POWERPC) {
 		 	if (SWAP32(arch->cputype) == CPU_TYPE_POWERPC) {
 				file->ppc = 1;
-				// ft_printf("Don't handle ppc, sorry..");
-				ft_printf("\n%s", file->archive_name);
+				ft_printf("Don't handle ppc, sorry..\n");
+				return ;
 
 				if (n_arch > 1)
 					ft_printf(" (for architecture ppc):\n");
 				else 
 					ft_printf(":\n");
 		 	} else if ((SWAP32(arch->cputype) == CPU_TYPE_I386 || arch->cputype == CPU_TYPE_I386)) {
-				ft_printf("%s", file->archive_name);
+		 		if (file->nm)
+					ft_printf("%s", file->archive_name);
 				file->ppc = 0;
 				if (n_arch > 1)
 					ft_printf(" (for architecture i386):\n");
