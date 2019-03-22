@@ -1,38 +1,16 @@
 
-/usr/lib/libtkstub8.5.a(tkStubLib.o):
-0000000000000188 s EH_Frame1
-0000000000000154 s LC1
-0000000000000157 s LC2
-0000000000000000 T _Tk_InitStubs
-                 U _tclStubsPtr
-00000000000001f0 S _tkIntPlatStubsPtr
-00000000000001e8 S _tkIntStubsPtr
-00000000000001f8 S _tkIntXlibStubsPtr
-00000000000001e0 S _tkPlatStubsPtr
-00000000000001d8 S _tkStubsPtr
-00000000000001a0 s func.eh
+/usr/lib/libkmod.a(c_start.o):
+000000000000001a T _OSKextGetCurrentIdentifier
+000000000000003c T _OSKextGetCurrentLoadTag
+000000000000002b T _OSKextGetCurrentVersionString
+                 U __realmain
+0000000000000000 T __start
+                 U _kmod_info
+header size : 1360, offset : 680 
 
-/usr/lib/libtkstub8.5.a(ttkStubLib.o):
-0000000000000188 A EH_Frame1
-00000000000001a8 s EH_Frame1
-000000000000010f s LC1
-0000000000000154 A LC1
-0000000000000113 s LC2
-0000000000000157 A LC2
-000000000000012e s LC3
-0000000000000144 s LC4
-000000000000015b s LC5
-000000000000016a s LC6
-0000000000000173 s LC7
-0000000000000189 s LC8
-000000000000019d s LC9
-0000000000000000 T _TtkInitializeStubs
-                 U _tclStubsPtr
-00000000000001f0 A _tkIntPlatStubsPtr
-00000000000001e8 A _tkIntStubsPtr
-00000000000001f8 A _tkIntXlibStubsPtr
-00000000000001e0 A _tkPlatStubsPtr
-00000000000001d8 A _tkStubsPtr
-00000000000001f8 S _ttkStubsPtr
-00000000000001a0 A func.eh
-00000000000001c0 s func.eh
+/usr/lib/libkmod.a(c_stop.o):
+                 U __antimain
+0000000000000000 T __stop
+header size : 1360, offset : 440 
+
+/usr/lib/libkmod.a(#1/20           1488588539  0     0     100644  172       `):

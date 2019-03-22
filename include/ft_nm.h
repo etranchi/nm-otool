@@ -35,6 +35,7 @@ typedef struct s_file
 {
 	void	*ptr;
 	void	*to_give_back;
+	int 	header_size;
 	int		ptr_size;
 	int 	is64;
 	int 	is32;

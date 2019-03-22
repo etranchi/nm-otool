@@ -13,7 +13,7 @@ void handle_archive(t_file *file) {
 
 	header = (struct ar_hdr *) ((void *) header + offset);
 	tmp_ptr = file->ptr;
-	while(42) {
+	while (42) {
 		tmp = ft_strsplit(header->ar_name, '\n');
 		if (!ft_strcmp(header->ar_name, ""))
 			break ;
@@ -24,6 +24,9 @@ void handle_archive(t_file *file) {
 		file->ptr =(void *) header_to_nm;
 		get_magic(file);
 		offset = ft_atoi(header->ar_size) + sizeof(struct ar_hdr);
+		ft_printf("header size : %d, offset : %d \n", file->header_size, offset);
+		if (((void *)header + offset - file->ptr) > (file->header_size))
+			return ;
 		header = ((void *)header + offset);
 	}
 	file->ptr = tmp_ptr;

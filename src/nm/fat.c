@@ -16,7 +16,6 @@ void handle_fat_header(t_file *file) {
 	i = -1;
 	file->ppc = 0;
 	file->corrupted = 0;
-	// ft_printf("n_arch %d\n", n_arch);
 	while (++i < (n_arch) && !file->corrupted) {
 		if (n_arch > 1 && file->ppc)
 			ft_printf("\n");
@@ -41,11 +40,12 @@ void handle_fat_header(t_file *file) {
 			else 
 				ft_printf(":\n");
 		}
-		if ((!file->ppc && (file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86))
+		if ((!file->ppc && (file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86) && n_arch > 1)
 			arch++;
 		else {
 			file->ptr = tmp_ptr + (file->isSwap ? SWAP32(arch->offset) : arch->offset);
 			file->lc_offset = 0;
+			file->header_size = (file->isSwap ? SWAP32(arch->size) : arch->size);
 			get_magic(file);
 			if (!file->ppc)
 				return ;	
