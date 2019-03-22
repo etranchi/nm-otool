@@ -34,15 +34,13 @@ typedef struct s_section {
 typedef struct s_file
 {
 	void	*ptr;
+	void	*to_give_back;
 	int		ptr_size;
 	int 	is64;
 	int 	is32;
 	int 	isSwap;
 	int 	isFat;
 	int 	mode;
-	int 	done;
-	int		did64;
-	int		did32;
 	int		ncmds;
 	int		ppc;
 	int 	corrupted;
@@ -62,6 +60,7 @@ void handle_archive(t_file *file);
 void handle_fat_header(t_file *file);
 
 
+void handle_header(t_file *f);
 void handle_64(t_file *file);
 int is_magic_64(uint32_t magic);
 int should_swap_bytes(uint32_t magic);

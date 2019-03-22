@@ -22,14 +22,12 @@ int initFile(t_file *file, char *name, int nm) {
 		return (0);
 	file->archive_name = name;
 	file->ptr = ptr;
+	file->to_give_back = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
 	file->section = NULL;
-	file->buff_size = buf.st_size;
 	file->lst = NULL;
 	file->lst_size = 0;
-	file->did32 = 0;
-	file->did64 = 0;
 	file->nm = nm;
 	file->ppc = 0;
 	return (1);
@@ -38,8 +36,9 @@ int initFile(t_file *file, char *name, int nm) {
 int main(int ac, char **av) {
 	
 	t_file *file;
-	int i = 0;
+	int i;
 
+	i = 0;
 	if(!(file = malloc(sizeof(t_file))))
 		return error();
 	if (ac < 2) 
@@ -50,7 +49,7 @@ int main(int ac, char **av) {
 		if(!file->nm)
 			ft_printf("%s:\n", av[1]);
 		get_magic(file);
-		if (munmap(file->ptr, file->buff_size) < 0)
+		if (munmap(file->to_give_back, file->ptr_size) < 0)
 			return error();
 	}
 	free(file);

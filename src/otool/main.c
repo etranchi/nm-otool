@@ -38,8 +38,6 @@ int main(int ac, char **av) {
 	file->section = NULL;
 	file->lst = NULL;
 	file->lst_size = 0;
-	file->did32 = 0;
-	file->did64 = 0;
 	file->nm = 0;
 	ft_printf("%s:\n", av[1]);
 	get_magic(file);
