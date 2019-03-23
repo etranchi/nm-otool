@@ -16,6 +16,13 @@ void handle_fat_header(t_file *file) {
 	i = -1;
 	file->ppc = 0;
 	file->corrupted = 0;
+	// ft_printf("ptr_size %d\n", file->ptr_size);
+	// ft_printf("size %d, offset %d, align %d\n", SWAP32(arch->size), SWAP32(arch->offset), SWAP32(arch->align));
+	if (((file->isSwap ? SWAP32(arch->size) : arch->size) + (file->isSwap ? SWAP32(arch->offset) : arch->offset)) > file->ptr_size)
+	{
+		ft_printf("Corrupted, fat header size + offset > file size\n");
+		exit(1);
+	}
 	while (++i < (n_arch) && !file->corrupted) {
 		if (n_arch > 1 && file->ppc)
 			ft_printf("\n");

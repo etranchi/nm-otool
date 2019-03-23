@@ -25,7 +25,7 @@ void print_otool_64(struct section_64 *section, t_file *file) {
 
 	ft_printf("Contents of (__TEXT,__text) section\n");
 
-	while (offset < section->size) {
+	while (offset < section->size && offset < file->ptr_size) {
 		ptr = file->ptr + (file->isSwap ? SWAP32(section->offset) : section->offset) + offset;
 		j = -1;
 		ft_printf("%016llx\t", section->addr + offset);
@@ -190,7 +190,7 @@ void print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f) {
 	if (f->ptr + symoff > f->ptr + f->ptr_size || f->ptr + stroff > f->ptr + f->ptr_size ) {
 		f->corrupted = 1;
 		printf("Corrupted\n");
-		return ;
+		exit(1);
 	}
 	if (f->mode == 64) 
 		array64 = (void *)f->ptr + symoff;
@@ -264,8 +264,8 @@ t_section *sec;
 	int i;
 
 	// ft_printf("name: %s, vmsize: %llu, filesize: %llu, buuf_size: %d\n", seg->segname, seg->vmsize, seg->filesize, file->ptr_size);
-	if ((seg->vmsize < seg->filesize || seg->filesize > file->ptr_size) && file->nm ) {
-		ft_printf("Corrupted\n");
+	if ((seg->vmsize < seg->filesize || seg->filesize > file->ptr_size) ) {
+		ft_printf("Corrupted, section size > file size\n");
 		exit(1);
 	}
 	if (!(sec = malloc(sizeof(t_section))))
@@ -304,6 +304,10 @@ static void dump_segment_commands(t_file *f) {
 	while(++i < f->ncmds) {
 		cmd = (void *)f->ptr + f->lc_offset + lc_size;
 		// printf("%d\n", cmd->cmdsize);
+		if (cmd && cmd->cmdsize > f->ptr_size) {
+			ft_printf("Corrupted load command\n");
+			exit(1);
+		}
 		if (cmd && cmd->cmd && (cmd->cmd == LC_SEGMENT_64)) {
 			// printf("segment 64\n");
 			get_sc_64((struct segment_command_64 *)((void *)f->ptr + f->lc_offset + lc_size), f);

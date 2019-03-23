@@ -1,16 +1,2 @@
-
-/usr/lib/libkmod.a(c_start.o):
-000000000000001a T _OSKextGetCurrentIdentifier
-000000000000003c T _OSKextGetCurrentLoadTag
-000000000000002b T _OSKextGetCurrentVersionString
-                 U __realmain
-0000000000000000 T __start
-                 U _kmod_info
-header size : 1360, offset : 680 
-
-/usr/lib/libkmod.a(c_stop.o):
-                 U __antimain
-0000000000000000 T __stop
-header size : 1360, offset : 440 
-
-/usr/lib/libkmod.a(#1/20           1488588539  0     0     100644  172       `):
+hell/curl_chibre 64:1 32:0 fat:0 swap:0
+64, ncmds: 15, sizeofcmds: 1360

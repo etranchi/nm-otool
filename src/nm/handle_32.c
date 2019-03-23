@@ -45,10 +45,10 @@ void get_sc_32(struct segment_command *seg, t_file *file) {
 	static int index = 0;
 	int i;
 
-	// if ((seg->vmsize < seg->filesize || seg->filesize > file->buff_size) && !file->nm) {
-	// 	ft_printf("Corrupted\n");
-	// 	exit(1);
-	// }
+	if ((seg->vmsize < seg->filesize || seg->filesize > file->ptr_size) ) {
+		ft_printf("Corrupted, section size > file size\n");
+		exit(1);
+	}
 	if (!(sec = malloc(sizeof(t_section))))
 		return ;
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
