@@ -59,14 +59,12 @@ int				handle_fat_header(t_file *file)
 	if (g_s_v(file->is_swap, arch->size) + g_s_v(file->is_swap, arch->offset)
 		> file->ptr_size)
 		return (error("Corrupted, fat header size + offset > file size\n"));
-	while (++i < (n_arch) && !file->corrupted)
+	while (++i < (n_arch))
 	{
-		if (n_arch > 1 && file->ppc)
-			ft_printf("\n");
 		if (g_s_v(file->is_swap, arch->cputype) == CPU_TYPE_POWERPC)
 			return (error("Don't handle ppc."));
-		if ((!file->ppc && (g_s_v(file->is_swap, arch->cputype)
-			== CPU_TYPE_X86) && n_arch > 1))
+		if ((g_s_v(file->is_swap, arch->cputype)
+			== CPU_TYPE_X86) && n_arch > 1)
 			arch++;
 		else
 			return (perform_header(arch, file, file->to_give_back));
