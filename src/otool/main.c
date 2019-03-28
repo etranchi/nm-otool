@@ -39,9 +39,8 @@ int main(int ac, char **av) {
 	file->lst = NULL;
 	file->lst_size = 0;
 	file->nm = 0;
-	ft_printf("%s:\n", av[1]);
 	get_magic(file);
-	if (munmap(file->ptr, buf.st_size) < 0) {
+	if (munmap(file->to_give_back, file->ptr_size) < 0) {
 		ft_printf("Error munmap\n");
 		return (0);
 	}

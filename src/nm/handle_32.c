@@ -39,40 +39,38 @@ void print_otool_32(struct section *section, t_file *file) {
 }
 
 
-void get_sc_32(struct segment_command *seg, t_file *file) {
+int get_sc_32(struct segment_command *seg, t_file *file) {
 	t_section *sec;
 	struct section *section;
 	static int index = 0;
 	int i;
 
-	if ((seg->vmsize < seg->filesize || seg->filesize > file->ptr_size) ) {
-		ft_printf("Corrupted, section size > file size\n");
-		exit(1);
-	}
+	if ((seg->vmsize < seg->filesize || seg->filesize > file->ptr_size))
+		return (error("Corrupted, section size > file size\n"));
 	if (!(sec = malloc(sizeof(t_section))))
-		return ;
+		return (error("Malloc error."));
 	if (!(sec->name = (char **)malloc(sizeof(char*) * (int) (seg->nsects + 1))))
-		return ;
+		return (error("Malloc error."));
 	sec->name[seg->nsects] = 0;
 	sec->index = index++;
 	section = (struct section*)(seg + 1);
 	sec->segname = ft_strdup(section->segname);
 	sec->next = NULL;
 	i = -1;
-	while (++i < (file->isSwap ? SWAP32(seg->nsects) : seg->nsects)) {
+	while (++i < (file->is_swap ? SWAP32(seg->nsects) : seg->nsects)) {
 		if (!file->nm && !ft_strcmp(section->sectname, "__text")) {
 			print_otool_32(section, file);
 		}
 		if (!(sec->name[i] = ft_strdup(section->sectname))) {
-			return;
+			return (SUCCESS);
 		}
 		section++;
 	}
-	addToSections(&file->section, sec);
-	return ;
+	add_to_sections(&file->section, sec);
+	return (SUCCESS);
 }
 
-void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset, t_file *f) {
+void add_to_32(t_func **lst, char *stringtable, struct nlist table, int offset, t_file *f) {
 	t_func *func;
 	t_func *tmp;
 	char *array_string;
@@ -81,10 +79,10 @@ void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset, t_
 	
 
 	func = malloc(sizeof(t_func));
-	if ((f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx) > offset) {
+	if ((f->is_swap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx) > offset) {
 		func->name = ft_strdup("bad string index");
 	} else {
-		array_string = stringtable + (f->isSwap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
+		array_string = stringtable + (f->is_swap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
 		tmp_name = malloc(sizeof(char) * (offset + 1));
 		tmp_name[offset] = '\0';
 		while (++i < offset && array_string[i]) {
@@ -100,7 +98,7 @@ void addTo32(t_func **lst, char *stringtable, struct nlist table, int offset, t_
 	}
 		
 	func->type = table.n_type;
-	func->value = f->isSwap ? SWAP32(table.n_value) : table.n_value;
+	func->value = f->is_swap ? SWAP32(table.n_value) : table.n_value;
 	if(!ft_strcmp(func->name, ""))
 		func->type = N_UNDF;
 	func->sect = table.n_sect;

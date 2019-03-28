@@ -1,2 +1,8 @@
-hell/curl_chibre 64:1 32:0 fat:0 swap:0
-64, ncmds: 15, sizeofcmds: 1360
+Archive : /usr/lib/libkmodc++.a
+/usr/lib/libkmodc++.a(cplus_start.o):
+/usr/lib/libkmodc++.a:
+Contents of (__TEXT,__text) section
+
+/usr/lib/libkmodc++.a(cplus_stop.o):
+/usr/lib/libkmodc++.a:
+Contents of (__TEXT,__text) section

@@ -29,26 +29,34 @@ int is_fat(uint32_t magic) {
   return magic == FAT_MAGIC || magic == FAT_CIGAM;
 }
 
-void get_magic(t_file *file) {
+
+int error(char *error) {
+	ft_printf("%s\n", error);
+	return (ERROR);
+}
+
+int get_magic(t_file *file) {
 	int magic_number;
 
 	magic_number = *(int *)file->ptr;
-	file->isFat = is_fat(magic_number);
+	file->is_fat = is_fat(magic_number);
 	file->is64 = is_magic_64(magic_number);
 	file->is32 = is_magic_32(magic_number);
-	file->isSwap = should_swap_bytes(magic_number);
-	// ft_printf("%s 64:%d 32:%d fat:%d swap:%d\n", file->archive_name, file->is64, file->is32, file->isFat, file->isSwap);
-	if (file->isFat) {
+	file->is_swap = should_swap_bytes(magic_number);
+	// ft_printf("%s 64:%d 32:%d fat:%d swap:%d\n", file->archive_name, file->is64, file->is32, file->is_fat, file->is_swap);
+	if (file->is_fat) {
 		// ft_printf("go to fat\n");
-		handle_fat_header(file);
+
+		return (handle_fat_header(file));
 	} else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0) {
 		// ft_printf("go to archive\n");
-		handle_archive(file);
+		return (handle_archive(file));
 	}
 	else if (file->is64 || file->is32) {
 		// ft_printf("go to 64/32\n");
-		handle_header(file);
+		return (handle_header(file));
 	}
+	return (ERROR);
 }
 
 

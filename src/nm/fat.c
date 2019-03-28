@@ -1,62 +1,75 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fat.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: etranchi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/28 16:23:57 by etranchi          #+#    #+#             */
+/*   Updated: 2019/03/28 16:24:01 by etranchi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "../../include/ft_nm.h"
+#include "../../include/ft_nm.h"
 
-
-
-void handle_fat_header(t_file *file) {
-	struct fat_header *header = (void *)file->ptr;
-	struct fat_arch *arch;
-	void *tmp_ptr;
-	int n_arch;
-	int i;
-	tmp_ptr = file->ptr;
-
-	n_arch = file->isSwap ? SWAP32(header->nfat_arch) : header->nfat_arch;
-	arch = (void *)header + sizeof(*header);
-	i = -1;
-	file->ppc = 0;
-	file->corrupted = 0;
-	// ft_printf("ptr_size %d\n", file->ptr_size);
-	// ft_printf("size %d, offset %d, align %d\n", SWAP32(arch->size), SWAP32(arch->offset), SWAP32(arch->align));
-	if (((file->isSwap ? SWAP32(arch->size) : arch->size) + (file->isSwap ? SWAP32(arch->offset) : arch->offset)) > file->ptr_size)
+void			put_fat_info(struct fat_arch *arch, t_file *file, int n_arch)
+{
+	if (file->nm)
+		ft_printf("%s", file->archive_name);
+	if (n_arch > 1)
 	{
-		ft_printf("Corrupted, fat header size + offset > file size\n");
-		exit(1);
+		if ((file->is_swap ? SWAP32(arch->cputype) : arch->cputype)
+			== CPU_TYPE_X86)
+			ft_printf(" (for architecture i386):\n");
+		else
+			ft_printf(" (for architecture x86_64):\n");
 	}
-	while (++i < (n_arch) && !file->corrupted) {
-		if (n_arch > 1 && file->ppc)
-			ft_printf("\n");
-		if ((file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_POWERPC) {
-			file->ppc = 1;
-			ft_printf("Don't handle ppc, sorry..\n");
-			return ;
-			if (n_arch > 1)
-				ft_printf(" (for architecture ppc):\n");
-			else 
-				ft_printf(":\n");
-	 	}
-	 	if (file->ppc && ((file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86_64 || (file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86)) {
-	 		if (file->nm)
-				ft_printf("%s", file->archive_name);
-			if (n_arch > 1) {
-				if ((file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86)
-					ft_printf(" (for architecture i386):\n");
-				else
-					ft_printf(" (for architecture x86_64):\n");
-			}
-			else 
-				ft_printf(":\n");
-		}
-		if ((!file->ppc && (file->isSwap ? SWAP32(arch->cputype) : arch->cputype) == CPU_TYPE_X86) && n_arch > 1)
-			arch++;
-		else {
-			file->ptr = tmp_ptr + (file->isSwap ? SWAP32(arch->offset) : arch->offset);
-			file->lc_offset = 0;
-			file->header_size = (file->isSwap ? SWAP32(arch->size) : arch->size);
-			get_magic(file);
-			if (!file->ppc)
-				return ;	
-		}
-	}
+	else
+		ft_printf(":\n");
 }
 
+int				perform_header(struct fat_arch *arch, t_file *file,
+	void *tmp_ptr)
+{
+	file->ptr = tmp_ptr + (file->is_swap ? SWAP32(arch->offset) : arch->offset);
+	file->lc_offset = 0;
+	file->header_size = (file->is_swap ? SWAP32(arch->size) : arch->size);
+	return (get_magic(file));
+}
+
+int				g_s_v(int isswap, int value)
+{
+	if (isswap)
+		return (SWAP32(value));
+	else
+		return (value);
+}
+
+int				handle_fat_header(t_file *file)
+{
+	struct fat_header	*header;
+	struct fat_arch		*arch;
+	int					n_arch;
+	int					i;
+
+	header = (void *)file->ptr;
+	n_arch = g_s_v(file->is_swap, header->nfat_arch);
+	arch = (void *)header + sizeof(*header);
+	i = -1;
+	if (g_s_v(file->is_swap, arch->size) + g_s_v(file->is_swap, arch->offset)
+		> file->ptr_size)
+		return (error("Corrupted, fat header size + offset > file size\n"));
+	while (++i < (n_arch) && !file->corrupted)
+	{
+		if (n_arch > 1 && file->ppc)
+			ft_printf("\n");
+		if (g_s_v(file->is_swap, arch->cputype) == CPU_TYPE_POWERPC)
+			return (error("Don't handle ppc."));
+		if ((!file->ppc && (g_s_v(file->is_swap, arch->cputype)
+			== CPU_TYPE_X86) && n_arch > 1))
+			arch++;
+		else
+			return (perform_header(arch, file, file->to_give_back));
+	}
+	return (SUCCESS);
+}
