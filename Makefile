@@ -1,7 +1,7 @@
 NM			= ft_nm
 OTOOL   	= ft_otool
-SRCS_NM		= src/nm/main.c src/nm/handle_64.c src/nm/handle_archive.c src/nm/fat.c src/nm/handle_32.c src/nm/utils.c
-SRCS_OTOOL	= src/otool/main.c src/nm/handle_64.c src/nm/handle_archive.c src/nm/fat.c src/nm/handle_32.c src/nm/utils.c
+SRCS_NM		= src/nm/main.c src/nm/handle_64.c src/nm/handle_archive.c src/nm/fat.c src/nm/handle_32.c src/nm/utils.c src/nm/print.c
+SRCS_OTOOL	= src/otool/main.c src/nm/handle_64.c src/nm/handle_archive.c src/nm/fat.c src/nm/handle_32.c src/nm/utils.c src/nm/print.c
 
 OBJS_NM		= 	$(patsubst srcs/%.c,objs/%.o,$(SRCS_NM))
 OBJS_OT		= 	$(patsubst srcs/%.c,objs/%.o,$(SRCS_OTOOL))
