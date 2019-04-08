@@ -10,56 +10,51 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../include/ft_nm.h"
+#include "../../include/ft_nm.h"
 
-int is_magic_64(uint32_t magic) {
-  return magic == MH_MAGIC_64 || magic == MH_CIGAM_64;
+int					is_magic_64(uint32_t magic)
+{
+	return (magic == MH_MAGIC_64 || magic == MH_CIGAM_64);
 }
 
-
-int is_magic_32(uint32_t magic) {
-  return magic == MH_MAGIC || magic == MH_CIGAM;
+int					is_magic_32(uint32_t magic)
+{
+	return (magic == MH_MAGIC || magic == MH_CIGAM);
 }
 
-int should_swap_bytes(uint32_t magic) {
-  return magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM;
+int					should_swap_bytes(uint32_t magic)
+{
+	return (magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM);
 }
 
-int is_fat(uint32_t magic) {
-  return magic == FAT_MAGIC || magic == FAT_CIGAM;
+int					is_fat(uint32_t magic)
+{
+	return (magic == FAT_MAGIC || magic == FAT_CIGAM);
 }
 
-
-int error(char *error) {
+int					error(char *error)
+{
 	ft_printf("%s\n", error);
 	return (ERROR);
 }
 
-int get_magic(t_file *file) {
-	int magic_number;
+int					get_magic(t_file *file)
+{
+	int				magic_number;
 
 	magic_number = *(int *)file->ptr;
 	file->is_fat = is_fat(magic_number);
 	file->is64 = is_magic_64(magic_number);
 	file->is32 = is_magic_32(magic_number);
 	file->is_swap = should_swap_bytes(magic_number);
-	// ft_printf("%s 64:%d 32:%d fat:%d swap:%d\n", file->archive_name, file->is64, file->is32, file->is_fat, file->is_swap);
-	if (file->is_fat) {
-		// ft_printf("go to fat\n");
-
+	if (file->is_fat)
 		return (handle_fat_header(file));
-	} else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0) {
-		// ft_printf("go to archive\n");
+	else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0)
 		return (handle_archive(file));
-	}
-	else if (file->is64 || file->is32) {
-		// ft_printf("go to 64/32\n");
+	else if (file->is64 || file->is32)
 		return (handle_header(file));
-	}
 	return (ERROR);
 }
-
-
 
 void				print_byte_to_hex(char byte)
 {
@@ -79,12 +74,10 @@ void				print_byte_to_hex(char byte)
 		else
 			str[count] = (char_hex % 10) + 'a';
 	}
-	
 	ft_printf("%c%c ", str[1], str[0]);
 }
 
-
-uint32_t	endian_32(uint32_t nb)
+uint32_t			endian_32(uint32_t nb)
 {
 	nb = ((nb & 0x000000FF) << 24 |
 			(nb & 0x0000FF00) << 8 |
@@ -93,7 +86,7 @@ uint32_t	endian_32(uint32_t nb)
 	return (nb);
 }
 
-uint64_t	endian_64(uint64_t nb)
+uint64_t			endian_64(uint64_t nb)
 {
 	nb = ((nb & 0x00000000000000FF) << 56 |
 			(nb & 0x000000000000FF00) << 40 |

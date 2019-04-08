@@ -107,9 +107,7 @@ int								add_to_sections(t_section **lst, t_section *sec)
 	t_section					*tmp;
 
 	if (!(*lst))
-	{
 		*lst = sec;
-	}
 	else
 	{
 		tmp = *lst;
@@ -220,14 +218,14 @@ static int						dump_segment_commands(t_file *f)
 		if (cmd && cmd->cmdsize > f->ptr_size)
 			return (error("Corrupted load command\n"));
 		sym = (struct symtab_command *)cmd;
+		f->offset = g_s_v(f->ppc, sym->strsize);
 		if (cmd && cmd->cmd && (cmd->cmd == LC_SEGMENT_64))
 			get_sc_64((struct segment_command_64 *)cmd, f);
 		else if (cmd->cmd && (cmd->cmd == LC_SEGMENT))
 			get_sc_32((struct segment_command *)cmd, f);
 		else if (cmd->cmd && (cmd->cmd == LC_SYMTAB && f->nm))
 			if (print_out(g_s_v(f->ppc, sym->nsyms), g_s_v(f->ppc, sym->symoff),
-				g_s_v(f->ppc, sym->stroff), g_s_v(f->ppc, sym->strsize), f)
-				== ERROR)
+				g_s_v(f->ppc, sym->stroff), f) == ERROR)
 				return (error("Error when trying to print"));
 		lc_size += f->is_swap ? SWAP32(cmd->cmdsize) : cmd->cmdsize;
 	}

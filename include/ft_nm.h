@@ -90,7 +90,7 @@ void					add_to_64(t_func **lst, char *stringtable, struct nlist_64 table, t_fil
 void					add_to_32(t_func **lst, char *stringtable, struct nlist table, t_file *f);
 void					print_otool_32(struct section *section, t_file *file);
 void					print_otool_64(struct section_64 *section, t_file *file);
-int						print_out(int nsyms, int symoff, int stroff, int strsize, t_file *f);
+int						print_out(int nsyms, int symoff, int stroff, t_file *f);
 void					print_lst(t_func *lst, t_file *f);
 void					print_byte_to_hex(char byte);
 void					find_best_place(t_func **lst, t_func *to_put);
