@@ -31,7 +31,6 @@ typedef struct			s_func {
 	unsigned long		value;
 	char				type;
 	char				tmp_type;
-	char				*indirect;
 	int					sect;
 	char				*name;
 	struct s_func		*next;
@@ -47,6 +46,7 @@ typedef struct			s_section {
 typedef struct			s_file
 {
 	void				*ptr;
+	int					fd;
 	void				*to_give_back;
 	int					header_size;
 	int					ptr_size;

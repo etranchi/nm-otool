@@ -118,6 +118,7 @@ void				add_to_32(t_func **lst, char *stringtable,
 		func->name = malloc(sizeof(char) * (f->i + 1));
 		func->name[f->i] = '\0';
 		ft_strncpy(func->name, tmp_name, ft_strlen(tmp_name));
+		free(tmp_name);
 	}
 	put_value_32(table, func, lst, f);
 }

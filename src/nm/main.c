@@ -18,11 +18,11 @@ int				init_file(t_file *file, char *name, int nm)
 	char		*ptr;
 	struct stat	buf;
 
-	if ((fd = open(name, O_RDONLY)) < 0)
+	if ((file->fd = open(name, O_RDONLY)) < 0)
 		return (error("Error when opening file."));
-	if (fstat(fd, &buf) < 0)
+	if (fstat(file->fd, &buf) < 0)
 		return (error("Error getting information about this file."));
-	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0))
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, file->fd, 0))
 		== MAP_FAILED)
 		return (error("Error mmap."));
 	file->archive_name = name;
@@ -59,6 +59,31 @@ int				main(int ac, char **av)
 		if (munmap(file->to_give_back, file->ptr_size) < 0)
 			return (error("Error munmap."));
 	}
+	t_section *tmp;
+	tmp = NULL;
+	while(file->section) 
+	{
+		tmp = file->section->next;
+		free(file->section->segname);
+		int i = 0;
+		while(file->section->name[i]) {
+			free(file->section->name[i]);
+			i++;
+		}
+		free(file->section->name);
+		free(file->section);
+		file->section = tmp;
+	}
+	t_func *tmp2;
+	tmp2 = NULL;
+	while(file->lst) 
+	{
+		tmp2 = file->lst->next;
+		free(file->lst->name);
+		free(file->lst);
+		file->lst = tmp2;
+	}
+	close(file->fd);
 	free(file);
 	return (SUCCESS);
 }
