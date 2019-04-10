@@ -105,5 +105,5 @@ uint32_t				endian_32(uint32_t nb);
 uint64_t				endian_64(uint64_t nb);
 void					put_type(t_section *section, int i,
 	t_file *file, t_func *lst);
-int								handle_symtab(struct symtab_command *sym, t_file *f);
+int						handle_symtab(struct symtab_command *sym, t_file *f);
 #endif

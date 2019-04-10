@@ -19,12 +19,12 @@ int				init_file(t_file *file, char *name, int nm)
 	struct stat	buf;
 
 	if ((file->fd = open(name, O_RDONLY)) < 0)
-		return (error("Error when opening file."));
+		return (ERROR);
 	if (fstat(file->fd, &buf) < 0)
-		return (error("Error getting information about this file."));
+		return (ERROR);
 	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, file->fd, 0))
 		== MAP_FAILED)
-		return (error("Error mmap."));
+		return (ERROR);
 	file->archive_name = name;
 	file->ptr = ptr;
 	file->to_give_back = ptr;
@@ -66,6 +66,16 @@ void			give_them_back(t_file *file)
 	}
 }
 
+void			perform_parsing(t_file *file, char **av)
+{
+	if (!file->nm)
+		ft_printf("%s:\n", av[1]);
+	if (get_magic(file) == ERROR)
+		(error("Error occured."));
+	if (munmap(file->to_give_back, file->ptr_size) < 0)
+		(error("Error munmap."));
+}
+
 int				main(int ac, char **av)
 {
 	t_file		*file;
@@ -79,13 +89,9 @@ int				main(int ac, char **av)
 	while (++i < ac)
 	{
 		if (init_file(file, av[i], 1) != SUCCESS)
-			return (ERROR);
-		if (!file->nm)
-			ft_printf("%s:\n", av[1]);
-		if (get_magic(file) == ERROR)
-			return (ERROR);
-		if (munmap(file->to_give_back, file->ptr_size) < 0)
-			return (error("Error munmap."));
+			error("Error about file.");
+		else
+			perform_parsing(file, av);
 	}
 	give_them_back(file);
 	close(file->fd);
