@@ -1,49 +1,92 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: etranchi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/10 14:41:35 by etranchi          #+#    #+#             */
+/*   Updated: 2019/04/10 14:41:36 by etranchi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-# include "../../include/ft_nm.h"
+#include "../../include/ft_nm.h"
 
-int main(int ac, char **av) {
-	int fd;
-	char *ptr;
-	struct stat buf;
-	t_file *file;
+int				init_file(t_file *file, char *name, int nm)
+{
+	int			fd;
+	char		*ptr;
+	struct stat	buf;
 
-	if(!(file = malloc(sizeof(t_file)))) {
-		ft_printf("Error malloc\n");
-		return (0);
-	}
-	if (ac < 2) {
-		ft_printf("No args..\n");
-		return (0);
-	}
-
-	int i = 0;
-	if ((fd = open(av[1], O_RDONLY)) < 0) {
-
-		ft_printf("Error open\n");
-		return (0);
-	}
-	if (fstat(fd, &buf) < 0) {
-		ft_printf("Error stat\n");
-		return (0);
-	}
-	if ((ptr = mmap(0, buf.st_size,PROT_READ, MAP_PRIVATE, fd, 0)) == MAP_FAILED) {
-		ft_printf("Error mmap\n");
-		return (0);
-	}
-
-	file->archive_name = av[1];
+	if ((file->fd = open(name, O_RDONLY)) < 0)
+		return (error("Error when opening file."));
+	if (fstat(file->fd, &buf) < 0)
+		return (error("Error getting information about this file."));
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, file->fd, 0))
+		== MAP_FAILED)
+		return (error("Error mmap."));
+	file->archive_name = name;
 	file->ptr = ptr;
+	file->to_give_back = ptr;
 	file->ptr_size = buf.st_size;
 	file->lc_offset = 0;
 	file->section = NULL;
 	file->lst = NULL;
 	file->lst_size = 0;
-	file->nm = 0;
-	get_magic(file);
-	if (munmap(file->to_give_back, file->ptr_size) < 0) {
-		ft_printf("Error munmap\n");
-		return (0);
+	file->nm = nm;
+	file->ppc = 0;
+	return (SUCCESS);
+}
+
+void			give_them_back(t_file *file)
+{
+	t_section	*tmp;
+	t_func		*tmp2;
+	int			i;
+
+	tmp = NULL;
+	tmp2 = NULL;
+	while (file->section)
+	{
+		tmp = file->section->next;
+		free(file->section->segname);
+		i = -1;
+		while (file->section->name[++i])
+			free(file->section->name[i]);
+		free(file->section->name);
+		free(file->section);
+		file->section = tmp;
 	}
+	while (file->lst)
+	{
+		tmp2 = file->lst->next;
+		free(file->lst->name);
+		free(file->lst);
+		file->lst = tmp2;
+	}
+}
+
+int				main(int ac, char **av)
+{
+	t_file		*file;
+	int			i;
+
+	i = 0;
+	if (!(file = malloc(sizeof(t_file))))
+		return (error("Error malloc."));
+	if (ac < 2)
+		return (error("No args"));
+	while (++i < ac)
+	{
+		if (init_file(file, av[i], 0) != SUCCESS)
+			return (ERROR);
+		if (get_magic(file) == ERROR)
+			return (ERROR);
+		if (munmap(file->to_give_back, file->ptr_size) < 0)
+			return (error("Error munmap."));
+	}
+	give_them_back(file);
+	close(file->fd);
 	free(file);
-	return (0);
+	return (SUCCESS);
 }

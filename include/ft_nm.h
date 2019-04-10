@@ -20,7 +20,6 @@
 # include <sys/stat.h>
 # include <stdlib.h>
 # include <ar.h>
-# define SWAP32(x)((((x) & 0xff000000) >> 24) | (((x) & 0xff0000) >> 8)| (((x) & 0xff00) << 8) | (((x) & 0xff) << 24))
 
 # define ERROR 1
 # define SUCCESS 0
@@ -86,10 +85,13 @@ int						add_to_sections(t_section **lst, t_section *sec);
 void					get_right_section(t_func *lst, t_file *file);
 void					get_type(t_func *lst, t_file *file);
 int						get_magic(t_file *file);
-void					add_to_64(t_func **lst, char *stringtable, struct nlist_64 table, t_file *f);
-void					add_to_32(t_func **lst, char *stringtable, struct nlist table, t_file *f);
+void					add_to_64(t_func **lst, char *stringtable,
+	struct nlist_64 table, t_file *f);
+void					add_to_32(t_func **lst, char *stringtable,
+	struct nlist table, t_file *f);
 void					print_otool_32(struct section *section, t_file *file);
-void					print_otool_64(struct section_64 *section, t_file *file);
+void					print_otool_64(struct section_64 *section,
+	t_file *file);
 int						print_out(int nsyms, int symoff, int stroff, t_file *f);
 void					print_lst(t_func *lst, t_file *f);
 void					print_byte_to_hex(char byte);

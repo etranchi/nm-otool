@@ -38,6 +38,34 @@ int				init_file(t_file *file, char *name, int nm)
 	return (SUCCESS);
 }
 
+void			give_them_back(t_file *file)
+{
+	t_section	*tmp;
+	t_func		*tmp2;
+	int			i;
+
+	tmp = NULL;
+	tmp2 = NULL;
+	while (file->section)
+	{
+		tmp = file->section->next;
+		free(file->section->segname);
+		i = -1;
+		while (file->section->name[++i])
+			free(file->section->name[i]);
+		free(file->section->name);
+		free(file->section);
+		file->section = tmp;
+	}
+	while (file->lst)
+	{
+		tmp2 = file->lst->next;
+		free(file->lst->name);
+		free(file->lst);
+		file->lst = tmp2;
+	}
+}
+
 int				main(int ac, char **av)
 {
 	t_file		*file;
@@ -59,30 +87,7 @@ int				main(int ac, char **av)
 		if (munmap(file->to_give_back, file->ptr_size) < 0)
 			return (error("Error munmap."));
 	}
-	t_section *tmp;
-	tmp = NULL;
-	while(file->section) 
-	{
-		tmp = file->section->next;
-		free(file->section->segname);
-		int i = 0;
-		while(file->section->name[i]) {
-			free(file->section->name[i]);
-			i++;
-		}
-		free(file->section->name);
-		free(file->section);
-		file->section = tmp;
-	}
-	t_func *tmp2;
-	tmp2 = NULL;
-	while(file->lst) 
-	{
-		tmp2 = file->lst->next;
-		free(file->lst->name);
-		free(file->lst);
-		file->lst = tmp2;
-	}
+	give_them_back(file);
 	close(file->fd);
 	free(file);
 	return (SUCCESS);

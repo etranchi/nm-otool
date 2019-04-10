@@ -66,3 +66,30 @@ int					handle_archive(t_file *file)
 	file->ptr = file->to_give_back;
 	return (SUCCESS);
 }
+
+void				get_type(t_func *lst, t_file *file)
+{
+	lst->tmp_type = lst->type;
+	if (ft_strcmp(lst->name, "bad string index") == 0)
+	{
+		lst->type = 'C';
+		if ((lst->tmp_type & N_TYPE) == N_ABS)
+			lst->type = 'A';
+	}
+	else if ((lst->tmp_type & N_TYPE) == N_UNDF)
+	{
+		lst->type = 'U';
+	}
+	else if ((lst->tmp_type & N_TYPE) == N_ABS)
+		lst->type = 'A';
+	else if ((lst->tmp_type & N_TYPE) == N_SECT)
+		get_right_section(lst, file);
+	else if ((lst->tmp_type & N_TYPE) == N_PBUD)
+		lst->type = 'S';
+	else if ((lst->tmp_type & N_TYPE) == N_INDR)
+		lst->type = 'I';
+	else
+		lst->type = 'X';
+	if (!(lst->tmp_type & N_EXT) && (lst->type != 'X'))
+		lst->type += 32;
+}

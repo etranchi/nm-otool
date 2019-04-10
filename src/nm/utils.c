@@ -12,26 +12,6 @@
 
 #include "../../include/ft_nm.h"
 
-int					is_magic_64(uint32_t magic)
-{
-	return (magic == MH_MAGIC_64 || magic == MH_CIGAM_64);
-}
-
-int					is_magic_32(uint32_t magic)
-{
-	return (magic == MH_MAGIC || magic == MH_CIGAM);
-}
-
-int					should_swap_bytes(uint32_t magic)
-{
-	return (magic == MH_CIGAM || magic == MH_CIGAM_64 || magic == FAT_CIGAM);
-}
-
-int					is_fat(uint32_t magic)
-{
-	return (magic == FAT_MAGIC || magic == FAT_CIGAM);
-}
-
 int					error(char *error)
 {
 	ft_printf("%s\n", error);

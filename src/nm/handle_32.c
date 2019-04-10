@@ -63,7 +63,7 @@ int					get_sc_32(struct segment_command *seg, t_file *file)
 	section = (struct section*)(seg + 1);
 	init_my_section_32(sec, seg, ++index, section);
 	i = -1;
-	while (++i < (file->is_swap ? SWAP32(seg->nsects) : seg->nsects))
+	while (++i < (file->is_swap ? endian_32(seg->nsects) : seg->nsects))
 	{
 		if (!file->nm && !ft_strcmp(section->sectname, "__text"))
 			print_otool_32(section, file);
@@ -80,7 +80,7 @@ void				put_value_32(struct nlist table, t_func *func,
 	t_func *tmp;
 
 	func->type = table.n_type;
-	func->value = f->is_swap ? SWAP32(table.n_value) : table.n_value;
+	func->value = f->is_swap ? endian_32(table.n_value) : table.n_value;
 	if (!ft_strcmp(func->name, ""))
 		func->type = N_UNDF;
 	func->sect = table.n_sect;
@@ -102,16 +102,15 @@ void				add_to_32(t_func **lst, char *stringtable,
 
 	f->i = -1;
 	func = malloc(sizeof(t_func));
-	swap = (f->is_swap ? SWAP32(table.n_un.n_strx) : table.n_un.n_strx);
+	swap = (f->is_swap ? endian_32(table.n_un.n_strx) : table.n_un.n_strx);
 	if (swap > f->offset)
 		func->name = ft_strdup("bad string index");
 	else
 	{
-		array_string = stringtable + (swap);
 		tmp_name = malloc(sizeof(char) * (f->offset + 1));
 		tmp_name[f->offset] = '\0';
-		while (++f->i < f->offset && array_string[f->i])
-			tmp_name[f->i] = array_string[f->i];
+		while (++f->i < f->offset && (stringtable + swap)[f->i])
+			tmp_name[f->i] = (stringtable + swap)[f->i];
 		tmp_name[f->i] = '\0';
 		if (ft_strstr(tmp_name, "radr://"))
 			return ;
