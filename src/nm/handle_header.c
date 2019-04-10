@@ -25,13 +25,14 @@ static int						dump_segment_commands(t_file *f)
 	{
 		cmd = (void *)f->ptr + f->lc_offset + lc_size;
 		if (cmd && cmd->cmdsize > f->ptr_size)
-			return (error("Corrupted load command\n"));
+			return (error("Corrupted load command"));
 		if (cmd && cmd->cmd && (cmd->cmd == LC_SEGMENT_64))
-			get_sc_64((struct segment_command_64 *)cmd, f);
+			f->error = get_sc_64((struct segment_command_64 *)cmd, f);
 		else if (cmd->cmd && (cmd->cmd == LC_SEGMENT))
-			get_sc_32((struct segment_command *)cmd, f);
+			f->error = get_sc_32((struct segment_command *)cmd, f);
 		else if (cmd->cmd && (cmd->cmd == LC_SYMTAB && f->nm))
-			if (handle_symtab((struct symtab_command *)cmd, f) == ERROR)
+			if ((f->error = handle_symtab((struct symtab_command *)cmd, f))
+				== ERROR)
 				return (error("Error when trying to print"));
 		lc_size += f->is_swap ? endian_32(cmd->cmdsize) : cmd->cmdsize;
 	}

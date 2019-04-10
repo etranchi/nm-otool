@@ -30,26 +30,6 @@ void							put_value_64(struct nlist_64 table,
 		find_best_place(lst, func);
 }
 
-void							add_to_64_2(char *stringtable,
-	t_file *f, t_func *func, int swap)
-{
-	char						*tmp_name;
-	char						*array_string;
-
-	array_string = stringtable + swap;
-	tmp_name = malloc(sizeof(char) * (f->offset + 1));
-	tmp_name[f->offset] = '\0';
-	while (++f->i < f->offset && array_string[f->i])
-		tmp_name[f->i] = array_string[f->i];
-	tmp_name[f->i] = '\0';
-	if (ft_strstr(tmp_name, "radr://"))
-		return ;
-	func->name = malloc(sizeof(char) * (f->i + 1));
-	func->name[f->i] = '\0';
-	ft_strncpy(func->name, tmp_name, ft_strlen(tmp_name));
-	free(tmp_name);
-}
-
 void							add_to_64(t_func **lst, char *stringtable,
 	struct nlist_64 table, t_file *f)
 {
@@ -60,13 +40,13 @@ void							add_to_64(t_func **lst, char *stringtable,
 	f->i = -1;
 	func = malloc(sizeof(t_func));
 	swap = (f->is_swap ? endian_32(table.n_un.n_strx) : table.n_un.n_strx);
-	if (swap > f->offset)
+	if (swap < 0 || swap > f->offset)
 		func->name = ft_strdup("bad string index");
 	else
 	{
 		tmp_name = malloc(sizeof(char) * (f->offset + 1));
 		tmp_name[f->offset] = '\0';
-		while (++f->i < f->offset && (stringtable + swap)[f->i])
+		while (++(f->i) < f->offset && (stringtable + swap)[f->i])
 			tmp_name[f->i] = (stringtable + swap)[f->i];
 		tmp_name[f->i] = '\0';
 		if (ft_strstr(tmp_name, "radr://"))

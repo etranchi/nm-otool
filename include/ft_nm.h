@@ -66,6 +66,7 @@ typedef struct			s_file
 	int					lst_size;
 	int					nsects;
 	int					buff_size;
+	int					error;
 	t_section			*section;
 	struct s_func		*lst;
 }						t_file;

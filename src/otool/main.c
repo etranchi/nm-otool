@@ -34,6 +34,7 @@ int				init_file(t_file *file, char *name, int nm)
 	file->lst = NULL;
 	file->lst_size = 0;
 	file->nm = nm;
+	file->error = 0;
 	file->ppc = 0;
 	return (SUCCESS);
 }
@@ -68,12 +69,16 @@ void			give_them_back(t_file *file)
 
 void			perform_parsing(t_file *file, char **av)
 {
-	if (!file->nm)
-		ft_printf("%s:\n", av[1]);
 	if (get_magic(file) == ERROR)
+	{
 		(error("Error occured."));
+		file->error = 1;
+	}
 	if (munmap(file->to_give_back, file->ptr_size) < 0)
+	{
 		(error("Error munmap."));
+		file->error = 1;
+	}
 }
 
 int				main(int ac, char **av)
@@ -89,12 +94,15 @@ int				main(int ac, char **av)
 	while (++i < ac)
 	{
 		if (init_file(file, av[i], 0) != SUCCESS)
+		{
+			file->error = 1;
 			error("Error about file.");
+		}
 		else
 			perform_parsing(file, av);
 	}
 	give_them_back(file);
 	close(file->fd);
 	free(file);
-	return (SUCCESS);
+	return (file->error ? ERROR : SUCCESS);
 }
