@@ -46,8 +46,6 @@ int								handle_header(t_file *f)
 
 	header_64 = (void *)f->ptr;
 	header = (void *)f->ptr;
-	if (!f->nm)
-		ft_printf("%s:\n", f->archive_name);
 	if (f->is64)
 	{
 		f->mode = 64;
