@@ -22,9 +22,9 @@ void				print_otool_64(struct section_64 *section, t_file *file)
 	offset = 0;
 	i = -1;
 	ft_printf("Contents of (__TEXT,__text) section\n");
-	while (offset < section->size && offset < file->ptr_size)
+	while (offset < g_s_v(file->is_swap, section->size)
+		&& offset < file->ptr_size)
 	{
-		ptr = file->ptr + g_s_v(file->is_swap, section->offset) + offset;
 		j = -1;
 		ft_printf("%016llx\t", section->addr + offset);
 		while (++j < 16)

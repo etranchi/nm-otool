@@ -69,6 +69,8 @@ void			give_them_back(t_file *file)
 
 void			perform_parsing(t_file *file, char **av)
 {
+	if (!file->nm)
+		ft_printf("%s:\n", file->archive_name);
 	if (get_magic(file) == ERROR)
 	{
 		(error("Error occured."));

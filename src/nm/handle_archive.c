@@ -57,7 +57,7 @@ int					handle_archive(t_file *file)
 			return (ERROR);
 		tmp = ft_strsplit(header->ar_name, ' ');
 		if (put_archive_info(file, header, tmp[0]) == ERROR)
-			return (ERROR);
+			return (SUCCESS);
 		header_to_nm = (void *)((void *)header +
 			sizeof(struct ar_hdr) + ft_atoi(header->ar_size));
 		perform(header_to_nm, file);
