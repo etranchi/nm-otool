@@ -21,6 +21,7 @@ int					error(char *error)
 int					get_magic(t_file *file)
 {
 	int				magic_number;
+	int				ret;
 
 	magic_number = *(int *)file->ptr;
 	file->is_fat = is_fat(magic_number);
@@ -30,7 +31,11 @@ int					get_magic(t_file *file)
 	if (file->is_fat)
 		return (handle_fat_header(file));
 	else if (ft_strncmp(file->ptr, ARMAG, SARMAG) == 0)
-		return (handle_archive(file));
+	{
+		ret = handle_archive(file);
+		file->ptr = file->to_give_back;
+		return (ret);
+	}
 	else if (file->is64 || file->is32)
 		return (handle_header(file));
 	return (ERROR);

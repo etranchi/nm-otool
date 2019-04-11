@@ -19,11 +19,11 @@ void				perform(struct ar_hdr *header_to_nm, t_file *file)
 }
 
 int					put_archive_info(t_file *file, struct ar_hdr *header,
-	char **tmp)
+	char *tmp)
 {
-	if (!ft_strcmp(header->ar_name, "") || (tmp[1] && tmp[1][0] == '#'))
+	if (!ft_strcmp(header->ar_name, "") || (tmp && tmp[0] == '#'))
 		return (ERROR);
-	ft_printf("%s(%s):\n", file->archive_name, tmp[1]);
+	ft_printf("%s(%s):\n", file->archive_name, tmp);
 	return (SUCCESS);
 }
 
@@ -49,31 +49,22 @@ int					handle_archive(t_file *file)
 	header = (struct ar_hdr *)(file->ptr + SARMAG);
 	offset = ft_atoi(header->ar_size) + sizeof(struct ar_hdr);
 	header = (struct ar_hdr *)((void *)header + offset);
-	
 	ft_printf("Archive : %s\n", file->archive_name);
 	while (42)
 	{
-		ft_printf("FILE INFO :\n");
-		ft_printf("size : %d\n", file->ptr_size);
-		ft_printf("HEADER INFO:\n");
-		ft_printf("name :%s\n", header->ar_name);
-		ft_printf("mode :%s\n", header->ar_mode);
-		ft_printf("size :%s\n", header->ar_size);
-		ft_printf("fmag :%s\n", header->ar_fmag);
-		if (!ft_strstr(header->ar_name, ARFMAG) || ft_atoi(header->ar_size) == 0)
+		if (!ft_strstr(header->ar_name, ARFMAG) ||
+			ft_atoi(header->ar_size) == 0)
 			return (ERROR);
-		tmp = ft_strsplit(header->ar_name, '\n');
-		if (put_archive_info(file, header, tmp) == ERROR)
-			return (SUCCESS);
-		tmp = ft_strsplit(tmp[0], '/');
+		tmp = ft_strsplit(header->ar_name, ' ');
+		if (put_archive_info(file, header, tmp[0]) == ERROR)
+			return (ERROR);
 		header_to_nm = (void *)((void *)header +
-			sizeof(struct ar_hdr) + ft_atoi(tmp[1]));
+			sizeof(struct ar_hdr) + ft_atoi(header->ar_size));
 		perform(header_to_nm, file);
 		if ((offset = check_end(header_to_nm, header, file)) == ERROR)
 			return (ERROR);
 		header = ((void *)header + offset);
 	}
-	file->ptr = file->to_give_back;
 	return (SUCCESS);
 }
 
